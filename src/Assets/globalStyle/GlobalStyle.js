@@ -14,8 +14,6 @@ export const GlobalStyle = createGlobalStyle`
     overflow-x: hidden;
   }
 
-
-  /* Scrollbar Syling */
   *::-webkit-scrollbar {
     width: 5px;
   }
