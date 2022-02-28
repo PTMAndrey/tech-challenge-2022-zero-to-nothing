@@ -13,7 +13,6 @@ import { css } from '@emotion/react';
 
 import { Helmet } from 'react-helmet';
 
-
 const LoginPage = () => {
     return ( 
         <StyledLoginForm>
@@ -24,8 +23,17 @@ const LoginPage = () => {
             <Container>
                 <form>
                     <FormTitle>
-
+                        Login to <br/>Tech App
                     </FormTitle>
+                    <label htmlFor="email">Email Address</label> 
+                        <input type="text" id="email-address" />
+                    <label htmlFor="password">Password</label>
+                        <input type="password" id="password"/>
+                    <button type="submit"  onClick={() =>{
+                        let email = document.getElementById("email-address").value;
+                        let pass = document.getElementById("password").value;
+                        alert("Email is : "+ email + "\nPassword is : " + pass)}}>Click me!</button>
+
                 </form>
             </Container>
         </StyledLoginForm>

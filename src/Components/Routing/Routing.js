@@ -1,4 +1,4 @@
-import { Routes, Route, Redirect, useLocation } from 'react-router-dom';
+import { BrowserRouter , Routes, Route, Redirect, useLocation } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 
@@ -8,21 +8,22 @@ import NotFound from '../../Pages/NotFound/NotFound';
 
 const Routing = () => {
     return ( 
-        <Routes>
-            <Route path="/login" exact element={<LoginPage/>} />
+        <BrowserRouter>
+            <Routes>
+                <Route exact path="/login" element={<LoginPage/>} />
 
-            <Route path='/dashboard'  exact element={<Dashboard/>} />
+                <Route exact path='/dashboard' element={<Dashboard/>} />
 
-            <Route path="/profile"  exact element={<Dashboard/>} />
-        
-            <Route path="/profile" exact element={<Dashboard/>} />
+                <Route exact path="/profile" element={<Dashboard/>} />
+            
+                <Route exact path="/profile" element={<Dashboard/>} />
 
-            <Route path="/"  exact element={<Dashboard/>} />
-         
-            <Route path="*" exact element={<NotFound/>} />
+                <Route exact path="/" element={<LoginPage/>} />
+            
+                <Route exact path="*" element={<NotFound/>} />
 
-        </Routes>
-
+            </Routes>
+        </BrowserRouter>
 
      );
 }
