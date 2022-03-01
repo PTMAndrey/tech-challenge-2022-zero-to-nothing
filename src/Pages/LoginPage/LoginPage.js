@@ -1,46 +1,66 @@
-import { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import styled from 'styled-components';
+import { useState } from "react";
+import { Helmet } from "react-helmet";
+import ReactTooltip from "react-tooltip";
+import ClipLoader from "react-spinners/ClipLoader";
+import Image from "../../Assets/image.jpg";
 
-import FormTitle from '../../Components/FormTitle/FormTitleComponent';
+//styles
+import { css } from "@emotion/react";
+import styled from "styled-components";
 
-import { ReactComponent as ShowIcon } from '../../Assets/show-password.svg';
-import { ReactComponent as HideIcon } from '../../Assets/hide-password.svg';
-import ReactTooltip from 'react-tooltip';
-import ClipLoader from 'react-spinners/ClipLoader';
-import { useDispatch, useSelector } from 'react-redux';
-import { css } from '@emotion/react';
+//Form components
+import FormTitle from "../../Components/Form/FormTitle/FormTitle";
+import FormLabel from "../../Components/Form/FormLabel/FormLabel";
+import FormInput from "../../Components/Form/FormInput/FormInput";
+import FormButton from "../../Components/Form/FormButton/FormButton";
+import { ReactComponent as ShowIcon } from "../../Assets/show-password.svg";
+import { ReactComponent as HideIcon } from "../../Assets/hide-password.svg";
 
-import { Helmet } from 'react-helmet';
+//Form validation imports
+import { useForm } from "react-hook-form";
 
 const LoginPage = () => {
-    return ( 
-        <StyledLoginForm>
-            <Helmet>
-                <title>Tech Challenge | Login</title>
-            </Helmet>
+  return (
+    <MainPage>
+      <StyledLoginForm>
+        <Helmet>
+          <title>Tech Challenge | Login</title>
+        </Helmet>
 
-            <Container>
-                <form>
-                    <FormTitle>
-                        Login to <br/>Tech App
-                    </FormTitle>
-                    <label htmlFor="email">Email Address</label> 
-                        <input type="text" id="email-address" />
-                    <label htmlFor="password">Password</label>
-                        <input type="password" id="password"/>
-                    <button type="submit"  onClick={() =>{
-                        let email = document.getElementById("email-address").value;
-                        let pass = document.getElementById("password").value;
-                        alert("Email is : "+ email + "\nPassword is : " + pass)}}>Click me!</button>
+        <Container>
+          <form>
+            <FormTitle>Login to Tech App</FormTitle>
+            <FormLabel htmlFor="email">Email Address</FormLabel>
+            <FormInput type="text" id="email-address" data-for="email" />
+            <FormLabel htmlFor="email">Password</FormLabel>
+            <input type="password" id="password" />
+            <FormButton type="submit">Login</FormButton>
 
-                </form>
-            </Container>
-        </StyledLoginForm>
-     );
-}
- 
+            {/* <button
+            type="submit"
+            onClick={() => {
+              let email = document.getElementById("email-address").value;
+              let pass = document.getElementById("password").value;
+              alert("Email is : " + email + "\nPassword is : " + pass);
+            }}
+          >
+            Click me!
+          </button> */}
+          </form>
+        </Container>
+      </StyledLoginForm>
+    </MainPage>
+  );
+};
+
 export default LoginPage;
+
+const MainPage = styled.div`
+  display: flex;
+  flex-direction: row;
+  min-height: 100vh;
+  user-select: none;
+`;
 
 const StyledLoginForm = styled.div`
   margin: 0 auto;
@@ -66,7 +86,6 @@ const StyledLoginForm = styled.div`
     flex: 1;
   }
 `;
-
 
 const Container = styled.div`
   display: flex;

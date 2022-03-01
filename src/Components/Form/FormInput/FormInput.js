@@ -1,5 +1,5 @@
-import styled, { css } from 'styled-components';
-const FormsInputComponent = styled.input`
+import styled from "styled-components";
+const FormInput = styled.input`
   display: block;
   height: 46px;
   width: 100%;
@@ -12,4 +12,4 @@ const FormsInputComponent = styled.input`
   margin-bottom: 10px;
 `;
 
-export default FormsInputComponent;
+export default FormInput;
