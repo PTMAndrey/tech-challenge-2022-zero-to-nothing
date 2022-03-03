@@ -18,6 +18,7 @@ const FormButton = styled.button`
   font-family: "Open-Sans", sans-serif;
   text-align: center;
   user-select: none;
+  opacity: 100% !important;
 
   :hover {
     background-color: #62799d;

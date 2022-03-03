@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Helmet } from "react-helmet";
 import ReactTooltip from "react-tooltip";
 import ClipLoader from "react-spinners/ClipLoader";
-import Image from "../../Assets/image.jpg";
+import BackgroundImage from "../../Components/BackImage/BackImage";
 
 //styles
 import { css } from "@emotion/react";
@@ -16,39 +16,38 @@ import FormButton from "../../Components/Form/FormButton/FormButton";
 import { ReactComponent as ShowIcon } from "../../Assets/show-password.svg";
 import { ReactComponent as HideIcon } from "../../Assets/hide-password.svg";
 
-//Form validation imports
-import { useForm } from "react-hook-form";
-
 const LoginPage = () => {
   return (
     <MainPage>
-      <StyledLoginForm>
-        <Helmet>
-          <title>Tech Challenge | Login</title>
-        </Helmet>
+      <BackgroundImage />
+      <BackDropForm>
+        <StyledLoginForm>
+          <Helmet>
+            <title>Tech Challenge | Login</title>
+          </Helmet>
 
-        <Container>
-          <form>
-            <FormTitle>Login to Tech App</FormTitle>
-            <FormLabel htmlFor="email">Email Address</FormLabel>
-            <FormInput type="text" id="email-address" data-for="email" />
-            <FormLabel htmlFor="email">Password</FormLabel>
-            <input type="password" id="password" />
-            <FormButton type="submit">Login</FormButton>
-
-            {/* <button
-            type="submit"
-            onClick={() => {
-              let email = document.getElementById("email-address").value;
-              let pass = document.getElementById("password").value;
-              alert("Email is : " + email + "\nPassword is : " + pass);
-            }}
-          >
-            Click me!
-          </button> */}
-          </form>
-        </Container>
-      </StyledLoginForm>
+          <Container>
+            <form>
+              <FormTitle>Login to Tech App</FormTitle>
+              <FormLabel htmlFor="email">Email Address</FormLabel>
+              <FormInput
+                placeholder="Email Address"
+                type="text"
+                id="email-address"
+                data-for="email"
+              />
+              <FormLabel htmlFor="email">Password</FormLabel>
+              <FormInput
+                placeholder="Password"
+                type="password"
+                id="password"
+                data-for="password"
+              />
+              <FormButton type="submit">Login</FormButton>
+            </form>
+          </Container>
+        </StyledLoginForm>
+      </BackDropForm>
     </MainPage>
   );
 };
@@ -56,21 +55,27 @@ const LoginPage = () => {
 export default LoginPage;
 
 const MainPage = styled.div`
-  display: flex;
-  flex-direction: row;
   min-height: 100vh;
   user-select: none;
+  justify-content: center;
+  z-index: 1;
 `;
 
+const BackDropForm = styled.div`
+  width: 100%;
+  max-width: 420px;
+  max-height: 450px;
+  z-index: 2;
+`;
 const StyledLoginForm = styled.div`
   margin: 0 auto;
-  display: flex;
   flex-direction: column;
   align-items: stretch;
   min-height: 100vh;
   width: 100%;
   max-width: 420px;
   padding: 15px;
+  z-index: 3;
 
   a {
     text-decoration: none;

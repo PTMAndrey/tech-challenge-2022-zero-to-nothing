@@ -7,6 +7,8 @@ const FormLabel = styled.label`
   font-size: 14px;
   line-height: 24px;
   color: #0b2559;
+
+  opacity: 100% !important;
   margin-bottom: ${(props) => (props.margin ? props.margin : "10px")};
   border-bottom: ${(props) => (props.border ? props.border : "none")};
 `;

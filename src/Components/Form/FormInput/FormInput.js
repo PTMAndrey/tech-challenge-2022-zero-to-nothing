@@ -9,6 +9,7 @@ const FormInput = styled.input`
   color: #62799d;
   font-size: 14px;
   line-height: 24px;
+  opacity: 100% !important;
   margin-bottom: 10px;
 `;
 
