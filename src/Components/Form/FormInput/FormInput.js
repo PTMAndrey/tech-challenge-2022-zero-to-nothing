@@ -1,5 +1,5 @@
-import styled, { css } from 'styled-components';
-const FormsInputComponent = styled.input`
+import styled from "styled-components";
+const FormInput = styled.input`
   display: block;
   height: 46px;
   width: 100%;
@@ -9,7 +9,8 @@ const FormsInputComponent = styled.input`
   color: #62799d;
   font-size: 14px;
   line-height: 24px;
+  opacity: 100% !important;
   margin-bottom: 10px;
 `;
 
-export default FormsInputComponent;
+export default FormInput;
