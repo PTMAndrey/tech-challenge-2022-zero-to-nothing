@@ -5,7 +5,11 @@ import image from "../../Assets/image.jpg";
 const Styles = styled.img`
   height: 100vh;
   width: 100vw;
-  pointer-events: none;
+  pointer-events: none;  
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
 `;
 const BackgroundImage = () => {
   return <Styles src={image} />;

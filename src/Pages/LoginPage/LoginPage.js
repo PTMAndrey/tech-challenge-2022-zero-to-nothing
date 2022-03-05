@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ScrollView } from 'react-native';
 import { Helmet } from "react-helmet";
 import ReactTooltip from "react-tooltip";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -19,7 +20,10 @@ import { ReactComponent as HideIcon } from "../../Assets/hide-password.svg";
 const LoginPage = () => {
   return (
     <MainPage>
-      <BackgroundImage />
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
+    />
       <BackDropForm>
         <StyledLoginForm>
           <Helmet>
@@ -48,6 +52,8 @@ const LoginPage = () => {
           </Container>
         </StyledLoginForm>
       </BackDropForm>
+
+      <BackgroundImage />
     </MainPage>
   );
 };
@@ -55,16 +61,22 @@ const LoginPage = () => {
 export default LoginPage;
 
 const MainPage = styled.div`
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
   user-select: none;
-  justify-content: center;
-  z-index: 1;
+  z-index:1;
 `;
 
 const BackDropForm = styled.div`
   width: 100%;
   max-width: 420px;
   max-height: 450px;
+  position:absolute;
+  background-color: #fff;
+  opacity: 0.8;
+  right: 20%;
+  top:5%;
   z-index: 2;
 `;
 const StyledLoginForm = styled.div`
@@ -96,4 +108,5 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
+  z-index:4;
 `;

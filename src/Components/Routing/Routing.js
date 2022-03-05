@@ -24,7 +24,7 @@ const Routing = () => {
 
         <Route exact path="/profile" element={<Dashboard />} />
 
-        <Route exact path="/" element={<LoginPage />} />
+        <Route exact path="/" element={<Main />} />
 
         <Route exact path="*" element={<NotFound />} />
       </Routes>
