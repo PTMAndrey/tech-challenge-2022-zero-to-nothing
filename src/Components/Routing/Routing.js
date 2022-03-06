@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import LoginPage from "../../Pages/LoginPage/LoginPage";
 import Dashboard from "../../Pages/Dashboard/Dashboard";
 import NotFound from "../../Pages/NotFound/NotFound";
+import Main from "../Main/Main";
 
 const Routing = () => {
   return (
