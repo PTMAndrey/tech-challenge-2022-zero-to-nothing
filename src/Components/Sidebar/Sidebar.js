@@ -9,6 +9,7 @@ import items from "./SidebarItems";
 
 const Sidebar = () => {
 
+  const role = 'Administrator';
   return (
     <IconContext.Provider value={{ color: "#62799d" }}>
       {/* <Hamburger positionAbsolute="true"> */}
@@ -21,7 +22,7 @@ const Sidebar = () => {
             </section>
             <div>
                 {items
-                    .filter( (item) => item.roles.includes('Administrator') )
+                    .filter( (item) => item.roles.includes(role) )
                     .map( (item) => (
                         <Item
                         label={item.label}
