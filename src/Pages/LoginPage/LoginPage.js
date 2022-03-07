@@ -17,13 +17,37 @@ import FormButton from "../../Components/Form/FormButton/FormButton";
 import { ReactComponent as ShowIcon } from "../../Assets/show-password.svg";
 import { ReactComponent as HideIcon } from "../../Assets/hide-password.svg";
 
+//Form validation imports
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+// import * as yup from 'yup';
+import * as yup from 'yup';
+
+
+
+// Validation Schema
+const schema = yup.object().shape({
+  email: yup.string().email('Email is invalid!').required('Email is required!'),
+  password: yup
+    .string()
+    .required('Password is required!')
+    .min(4, 'Password must be at least 4 characters long!')
+    .max(50, 'Password must be of maximum 50 characters!'),
+});
+
 const LoginPage = () => {
+const [passwordShown, setPasswordShown] = useState(false);
+
+const passToggleHandler = () => {
+  setPasswordShown(!passwordShown);
+};
   return (
     <MainPage>
-    <ScrollView
+    {/* <ScrollView
       showsVerticalScrollIndicator={false}
       showsHorizontalScrollIndicator={false}
-    />
+      disableScrollViewPanResponder={true}
+    /> */}
       <BackDropForm>
         <StyledLoginForm>
           <Helmet>
@@ -41,12 +65,19 @@ const LoginPage = () => {
                 data-for="email"
               />
               <FormLabel htmlFor="email">Password</FormLabel>
+              <PasswordInput>
               <FormInput
                 placeholder="Password"
-                type="password"
                 id="password"
+                type={passwordShown ? 'text' : 'password'}
                 data-for="password"
               />
+              {passwordShown ? (
+              <HideIcon onClick={passToggleHandler} />
+            ) : (
+              <ShowIcon onClick={passToggleHandler} />
+            )}
+            </PasswordInput>
               <FormButton type="submit">Login</FormButton>
             </form>
           </Container>
@@ -71,21 +102,17 @@ const MainPage = styled.div`
 const BackDropForm = styled.div`
   width: 100%;
   max-width: 420px;
-  max-height: 450px;
+  max-height: 390px;
   position:absolute;
   background-color: #fff;
   opacity: 0.8;
-  right: 20%;
-  top:5%;
+  right: 32%;
+  overflow: hidden;
+  top:25%;
   z-index: 2;
 `;
 const StyledLoginForm = styled.div`
-  margin: 0 auto;
-  flex-direction: column;
-  align-items: stretch;
   min-height: 100vh;
-  width: 100%;
-  max-width: 420px;
   padding: 15px;
   z-index: 3;
 
@@ -109,4 +136,39 @@ const Container = styled.div`
   flex-direction: column;
   height: 100%;
   z-index:4;
+`;
+
+const PasswordInput = styled.div`
+  display: flex;
+  align-items: center;
+  input {
+    width: 100%;
+    border-radius: 8px 0px 0px 8px;
+    margin-bottom: 0px;
+    border-right: none;
+
+    &:focus {
+      outline: none;
+      border: 1px solid #0499ff;
+      border-right: none;
+    }
+
+    &:focus + {
+      svg {
+        border: 1px solid #0499ff;
+        border-left: none;
+      }
+    }
+  }
+
+  svg {
+    height: 46px;
+    padding: 8px 14px 8px 8px;
+    cursor: pointer;
+    fill: #62799d;
+    border: 1px solid
+      ${(p) => (p.error ? '#c57474' : p.validated ? '#00CB14' : '#62799d')};
+    border-radius: 0 8px 8px 0;
+    border-left: none;
+  }
 `;

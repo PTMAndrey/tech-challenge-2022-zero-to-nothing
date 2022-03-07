@@ -15,16 +15,18 @@ const FormButton = styled.button`
   font-weight: 600;
   letter-spacing: 0.1em;
   cursor: pointer;
+  margin-left:calc(30%);
+
   font-family: "Open-Sans", sans-serif;
   text-align: center;
   user-select: none;
   opacity: 100% !important;
 
-  :hover {
-    background-color: #62799d;
-    color: black;
-    transition: 0.3s;
-  }
+  // :hover {
+  //   background-color: #6495ED;
+  //   color: black;
+  //   transition: 0.6s;
+  // }
 `;
 
 export default FormButton;
