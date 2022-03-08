@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const URLBase = "localhost:3000/";
+const URLBase = "https://localhost:7103/";
 
 var token = localStorage.getItem(token);
 
@@ -28,10 +28,14 @@ export const authAPI = {
       .post(`${URLBase}api/Authenticate/login`, {
         email: email,
         password: password,
-      })
+      },
+
+      
+      )
       .catch(function (error) {
         if (error.response) {
-          if (error.response.data.Message == "Unauthorized");
+          console.log("mesaj eroare" + error.response.data);
+          if (error.response.data.title == "Unauthorized");
           return { data: "", err: true };
         }
       });
