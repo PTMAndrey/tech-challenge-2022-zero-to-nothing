@@ -58,7 +58,9 @@ export const authAPI = {
       const response = await fetch(endpoint, {
         method: "POST",
         headers: {
-          //   "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+          // "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+          accept: "*/*",
+          // "Content-Type": "application/json",
           "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
