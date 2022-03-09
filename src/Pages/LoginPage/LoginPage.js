@@ -63,20 +63,19 @@ const LoginPage = () => {
     const res = await authAPI.login(email, password);
     console.log(res);
 
-    // if (res.err == true) {
-    //   setIsValid(false);
-    //   setLoggedIn(false);
-    //   return false;
-    // }
+    if (res.err == true) {
+      setIsValid(false);
+      setLoggedIn(false);
+      return false;
+    }
 
-    // localStorage.setItem("token", res.data.Token);
-    // localStorage.setItem("role", res.data.Role);
-    // localStorage.setItem("id", res.data.Id);
+    localStorage.setItem("token", res.token);
+    localStorage.setItem("role", res.role);
 
-    // if (localStorage.getItem("token") && localStorage.getItem("role")) {
-    //   setLoggedIn(true);
-    //   return true;
-    // }
+    if (localStorage.getItem("token") && localStorage.getItem("role")) {
+      setLoggedIn(true);
+      return true;
+    }
     setLoggedIn(false);
     return false;
   };
