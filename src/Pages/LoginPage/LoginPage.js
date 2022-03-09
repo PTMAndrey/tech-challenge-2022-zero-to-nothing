@@ -1,12 +1,11 @@
 import { useState } from "react";
-import { ScrollView } from 'react-native';
 import { Helmet } from "react-helmet";
 import ReactTooltip from "react-tooltip";
-import ClipLoader from "react-spinners/ClipLoader";
 import BackgroundImage from "../../Components/BackImage/BackImage";
+import { authAPI } from "../../api/apiv2";
+import { Navigate } from "react-router-dom";
 
 //styles
-import { css } from "@emotion/react";
 import styled from "styled-components";
 
 //Form components
@@ -16,43 +15,138 @@ import FormInput from "../../Components/Form/FormInput/FormInput";
 import FormButton from "../../Components/Form/FormButton/FormButton";
 import { ReactComponent as ShowIcon } from "../../Assets/show-password.svg";
 import { ReactComponent as HideIcon } from "../../Assets/hide-password.svg";
+import { device } from "../../Components/DevicesSize/device";
+
+//Form validation imports
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+// Validation Schema
+const schema = yup.object().shape({
+  email: yup.string().email("Email is invalid!").required("Email is required!"),
+  password: yup
+    .string()
+    .required("Password is required!")
+    .label("Password Confirm")
+    .min(4, "Password must be at least 4 characters long!")
+    .max(50, "Password must be of maximum 50 characters!"),
+});
 
 const LoginPage = () => {
+  const [passwordShown, setPasswordShown] = useState(false);
+  const [isValid, setIsValid] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  const passToggleHandler = () => {
+    setPasswordShown(!passwordShown);
+  };
+
+  const handleValid = () => {
+    setIsValid(true);
+  };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    mode: "onSubmit",
+    reValidateMode: "onChange",
+    resolver: yupResolver(schema),
+  });
+
+  const onSubmit = async (data) => {
+    const email = data.email;
+    const password = data.password;
+
+    const res = await authAPI.login(email, password);
+    console.log(res);
+
+    if (res.err == true) {
+      setIsValid(false);
+      setLoggedIn(false);
+      return false;
+    }
+
+    localStorage.setItem("token", res.token);
+    localStorage.setItem("role", res.role);
+
+    if (localStorage.getItem("token") && localStorage.getItem("role")) {
+      setLoggedIn(true);
+      return true;
+    }
+    setLoggedIn(false);
+    return false;
+  };
+
   return (
     <MainPage>
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      showsHorizontalScrollIndicator={false}
-    />
+      {loggedIn ? <Navigate to="/" /> : null}
       <BackDropForm>
         <StyledLoginForm>
           <Helmet>
             <title>Tech Challenge | Login</title>
           </Helmet>
-
           <Container>
-            <form>
+            <form onSubmit={handleSubmit(onSubmit)} spellCheck="false">
               <FormTitle>Login to Tech App</FormTitle>
               <FormLabel htmlFor="email">Email Address</FormLabel>
               <FormInput
                 placeholder="Email Address"
+                validated={isValid}
+                error={isValid && errors.email}
                 type="text"
-                id="email-address"
+                id="email-add"
                 data-for="email"
+                data-tip={`${errors.email ? errors.email.message : ""}`}
+                {...register("email")}
               />
-              <FormLabel htmlFor="email">Password</FormLabel>
-              <FormInput
-                placeholder="Password"
-                type="password"
-                id="password"
-                data-for="password"
+              <ReactTooltip
+                id="email"
+                type="error"
+                effect="solid"
+                place="right"
+                getContent={() => (errors.email ? errors.email.message : "")}
               />
-              <FormButton type="submit">Login</FormButton>
+              <FormLabel htmlFor="password">Password</FormLabel>
+              <PasswordInput
+                error={isValid && errors.password}
+                data-tip={`${errors.password ? errors.password.message : ""}`}
+                validated={isValid}
+                data-for="passwordinput"
+              >
+                <FormInput
+                  placeholder="Password"
+                  id="password"
+                  error={isValid && errors.password}
+                  validated={isValid}
+                  name="password"
+                  type={passwordShown ? "text" : "password"}
+                  {...register("password")}
+                />
+                {passwordShown ? (
+                  <HideIcon onClick={passToggleHandler} />
+                ) : (
+                  <ShowIcon onClick={passToggleHandler} />
+                )}
+              </PasswordInput>
+              <ReactTooltip
+                id="passwordinput"
+                place="right"
+                type="error"
+                effect="solid"
+                getContent={() =>
+                  errors.password ? errors.password.message : ""
+                }
+              />
+              <FormButton type="submit" onClick={() => handleValid()}>
+                Login
+              </FormButton>
             </form>
           </Container>
         </StyledLoginForm>
       </BackDropForm>
-
       <BackgroundImage />
     </MainPage>
   );
@@ -65,27 +159,31 @@ const MainPage = styled.div`
   flex-direction: column;
   min-height: 100vh;
   user-select: none;
-  z-index:1;
+  z-index: 1;
 `;
 
 const BackDropForm = styled.div`
   width: 100%;
   max-width: 420px;
-  max-height: 450px;
-  position:absolute;
+  max-height: 390px;
+  position: absolute;
   background-color: #fff;
   opacity: 0.8;
-  right: 20%;
-  top:5%;
+  right: 32%;
+  overflow: hidden;
+  top: 25%;
   z-index: 2;
+
+  @media ${device.tablet} {
+    left: 25%;
+  }
+
+  @media ${device.mobileL} {
+    left: 5%;
+  }
 `;
 const StyledLoginForm = styled.div`
-  margin: 0 auto;
-  flex-direction: column;
-  align-items: stretch;
   min-height: 100vh;
-  width: 100%;
-  max-width: 420px;
   padding: 15px;
   z-index: 3;
 
@@ -108,5 +206,40 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  z-index:4;
+  z-index: 4;
+`;
+
+const PasswordInput = styled.div`
+  display: flex;
+  align-items: center;
+  input {
+    width: 100%;
+    border-radius: 8px 0px 0px 8px;
+    margin-bottom: 0px;
+    border-right: none;
+
+    &:focus {
+      outline: none;
+      border: 1px solid #0048ba;
+      border-right: none;
+    }
+
+    &:focus + {
+      svg {
+        border: 1px solid #0048ba;
+        border-left: none;
+      }
+    }
+  }
+
+  svg {
+    height: 46px;
+    padding: 8px 14px 8px 8px;
+    cursor: pointer;
+    fill: #62799d;
+    border: 1px solid
+      ${(p) => (p.error ? "#c57474" : p.validated ? "#00CB14" : "#62799d")};
+    border-radius: 0 8px 8px 0;
+    border-left: none;
+  }
 `;
