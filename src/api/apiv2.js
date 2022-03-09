@@ -1,6 +1,7 @@
 import axios from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import endpoints from "./endpoints";
+
+const URLBase = "https://localhost:7103/";
 
 function delay(t, v) {
   return new Promise(function (resolve) {
@@ -40,22 +41,24 @@ const getTokenBearer = async () => {
   }, 500);
 };
 
+const endpoint = `${URLBase}api/Authenticate/login`;
+
 export const authAPI = {
   async login(email, password) {
     localStorage.clear();
-
-    console.log(endpoints.login);
 
     try {
       const body = {
         email: email,
         password: password,
       };
+
+      console.log(JSON.stringify(body));
       await delay(5);
-      const response = await fetch(endpoints.login, {
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: {
-          accept: "*/*",
+          //   "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
           "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
@@ -63,36 +66,7 @@ export const authAPI = {
       console.log(response);
       if (response.ok) {
         const data = await response.json();
-
-        return data;
-      } else if (response.status === 400) {
-        const error = await response.json();
-        throw Error(error);
-      } else {
-        return emptyUser;
-      }
-    } catch (error) {
-      console.log(error);
-      throw Error(error);
-    }
-  },
-};
-
-export const get_Users = {
-  async login() {
-    try {
-      await delay(5);
-      const response = await fetch(endpoints.get_users, {
-        method: "POST",
-        headers: {
-          accept: "*/*",
-          "Content-Type": "application/json",
-        },
-        // body: JSON.stringify(body),
-      });
-      console.log(response);
-      if (response.ok) {
-        const data = await response.json();
+        console.log(data);
 
         return data;
       } else if (response.status === 400) {
