@@ -1,27 +1,33 @@
 import styled from 'styled-components';
 import {useLocation} from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import Dashboard from '../../Pages/Dashboard/Dashboard';
-import UsersManagement from '../../Pages/UsersManagement/UsersManagement';
-import BuildingsManagement from '../../Pages/BuildingsManagement/BuildingsManagement';
-import OfficeManagement from '../../Pages/OfficeManagement/OfficeManagement';
-import OfficeStatus from '../../Pages/OfficeStatus/OfficeStatus';
-import DeskAssignment from '../../Pages/DeskAssignment/DeskAssignment';
+import User from '../../Pages/User/User';
+import Buildings from '../../Pages/Buildings/Buildings';
+import Office from '../../Pages/Office/Office';
+import Offices from '../../Pages/Offices/Offices';
+import Desk from '../../Pages/Desk/Desk';
 import Remote from '../../Pages/Remote/Remote';
-import UserStatus from '../../Pages/UserStatus/UserStatus';
-
+import Users from '../../Pages/Users/Users.js';
+import Header from '../../Components/Header/Header';
+// this component represents the Content for every component selected from Sidebar
 
 const Content = () => {
+  const showSidebar = useSelector((state) => state.ui.showSidebar);
     const location = useLocation().pathname;
+    console.log(location);
     return ( 
-        <Container>
-            {location === '/dashboard' && <Dashboard/> }
-            {location === '/user-management' && <UsersManagement/> }
-            {location === '/buildings-management' && <BuildingsManagement/> }
-            {location === '/office-management' && <OfficeManagement/> }
-            {location === '/office-status' && <OfficeStatus/> }
-            {location === '/desk-assignment' && <DeskAssignment/> }
-            {location === '/remote' && <Remote/> }
-            {location === '/user-status' && <UserStatus/> }
+        <Container showSidebar={showSidebar}>
+            <Header/>
+            {location === '/' && <Dashboard/> }{/* Dashboard*/}
+            {location === '/dashboard' && <Dashboard/> }{/* Dashboard*/}
+            {location === '/user' && <User/> } {/* User management*/}
+            {location === '/buildings' && <Buildings/> }{/* Buildings Management*/}
+            {location === '/office' && <Office/> }{/* Office Management*/}
+            {location === '/offices' && <Offices/> }{/* Office Status */}
+            {location === '/desk' && <Desk/> }{/* Desk Assignment*/}
+            {location === '/remote' && <Remote/> }{/* Remote request*/}
+            {location === '/users' && <Users/> }{/* User Status*/}
         </Container>
      );
 };
