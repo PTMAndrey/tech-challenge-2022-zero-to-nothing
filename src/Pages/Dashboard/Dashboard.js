@@ -2,9 +2,7 @@ import styled from "styled-components";
 
 const Dashboard = () => {
   return (
-    <StyledDashboard>
-      <p>test</p>
-    </StyledDashboard>
+    <div>Dashboard</div>
   );
 };
 
