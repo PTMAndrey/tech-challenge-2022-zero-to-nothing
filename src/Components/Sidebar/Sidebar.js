@@ -64,10 +64,12 @@ const Sidebar = () => {
                         key={item.label}
                         to={item.route}
                         >
+                         <Link to={item.route}>
+                            <p>{item.icon}</p>
+                          </Link> 
                           <Link to={item.route}>
-                            {item.icon}
                             <p>{item.label}</p>
-                            </Link>
+                          </Link>
                         </Item>
                     )) }
             </div>
