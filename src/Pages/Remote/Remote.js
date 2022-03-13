@@ -1,6 +1,6 @@
 const Remote = () => {
     return ( 
-        <div></div>
+        <div>Remote</div>
      );
 }
  
