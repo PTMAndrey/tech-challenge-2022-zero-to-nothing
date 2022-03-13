@@ -2,8 +2,9 @@ import { useState } from "react";
 import { Helmet } from "react-helmet";
 import ReactTooltip from "react-tooltip";
 import BackgroundImage from "../../Components/BackImage/BackImage";
-import { authAPI } from "../../api/apiv2";
-import { Navigate } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate} from 'react-router-dom';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 //styles
 import styled from "styled-components";
@@ -15,12 +16,18 @@ import FormInput from "../../Components/Form/FormInput/FormInput";
 import FormButton from "../../Components/Form/FormButton/FormButton";
 import { ReactComponent as ShowIcon } from "../../Assets/show-password.svg";
 import { ReactComponent as HideIcon } from "../../Assets/hide-password.svg";
-import { device } from "../../Components/DevicesSize/device";
+import { device } from "../../Components/DevicesSize/Device";
 
 //Form validation imports
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { css } from '@emotion/react';
+
+//API
+import endpoints from '../../api/endpoints';
+import { getUser } from '../../api/apiv2';
+
 
 // Validation Schema
 const schema = yup.object().shape({
@@ -33,8 +40,19 @@ const schema = yup.object().shape({
     .max(50, "Password must be of maximum 50 characters!"),
 });
 
+const override = css`
+  display: block;
+  margin: 0 auto;
+`;
+const color = '#0b2559';
+
 const LoginPage = () => {
   const [passwordShown, setPasswordShown] = useState(false);
+  const pending = useSelector((state) => state.pending.isPending);
+  const state = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const history = useNavigate();
+  const [role, setRole] = useState("");
   const [isValid, setIsValid] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
 
@@ -56,33 +74,20 @@ const LoginPage = () => {
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = async (data) => {
-    const email = data.email;
-    const password = data.password;
-
-    const res = await authAPI.login(email, password);
-    console.log(res);
-
-    if (res.err == true) {
-      setIsValid(false);
-      setLoggedIn(false);
-      return false;
-    }
-
-    localStorage.setItem("token", res.token);
-    localStorage.setItem("role", res.role);
-
-    if (localStorage.getItem("token") && localStorage.getItem("role")) {
-      setLoggedIn(true);
-      return true;
-    }
-    setLoggedIn(false);
-    return false;
+  const onSubmit = (form)=> {
+    dispatch(
+      getUser({
+        endpoint: endpoints.login,
+        body: form,
+        history: history,
+      })
+    );
   };
 
   return (
     <MainPage>
-      {loggedIn ? <Navigate to="/" /> : null}
+      {/* {loggedIn ? <Navigate to="/" /> : null} */}
+     
       <BackDropForm>
         <StyledLoginForm>
           <Helmet>
@@ -139,10 +144,19 @@ const LoginPage = () => {
                 getContent={() =>
                   errors.password ? errors.password.message : ""
                 }
-              />
+              />{pending && (
+                <ClipLoader
+                  color={color}
+                  loading={pending}
+                  css={override}
+                  size={50}
+                />
+              )}
               <FormButton type="submit" onClick={() => handleValid()}>
                 Login
               </FormButton>
+              
+          {state.error && <p>{state.error.substring(7)}</p>}
             </form>
           </Container>
         </StyledLoginForm>
@@ -165,7 +179,7 @@ const MainPage = styled.div`
 const BackDropForm = styled.div`
   width: 100%;
   max-width: 420px;
-  max-height: 390px;
+  max-height: 430px;
   position: absolute;
   background-color: #fff;
   opacity: 0.8;

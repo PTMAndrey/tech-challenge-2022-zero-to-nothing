@@ -1,6 +1,7 @@
-import axios from "axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import endpoints from "./endpoints";
+import { setPending } from './indexApi';
+
+// const URLBase = "https://localhost:7103/";
 
 function delay(t, v) {
   return new Promise(function (resolve) {
@@ -10,100 +11,209 @@ function delay(t, v) {
 
 const emptyUser = {
   id: "",
-  firstName: "",
-  lastName: "",
-  photo: "",
+  status: "Inactive",
+  birthdate:"",
   email: "",
-  password: "",
-  role: 0,
-  status: "0",
-  personalNumber: "",
-  address: "",
+  expiration:"",
+  firstName: "",
+  gender:"",
+  lastName: "",
+  nationality: "",
+  remotePercentage: 0,
+  role: "",
   token: "",
 };
 
-var token = localStorage.getItem(token);
+const initialState = {
+  isLoggedIn: false,
+  loading: false,
+  error: null,
+  user: {
+    id: "",
+    status: localStorage.getItem('status'),
+    birthdate:"",
+    email: "",
+    expiration:"",
+    firstName: "",
+    gender:"",
+    lastName: "",
+    nationality: "",
+    remotePercentage: 0,
+    role: localStorage.getItem('role'),
+    token: "",
+  },
+};
 
-const getTokenBearer = async () => {
-  token = localStorage.getItem("token");
-  if (
-    token != null &&
-    token != "undefined" &&
-    token != undefined &&
-    token != "" &&
-    token
-  ) {
-    return;
+// var token = localStorage.getItem(token);
+
+// const getTokenBearer = async () => {
+//   token = localStorage.getItem("token");
+//   if (
+//     token != null &&
+//     token != "undefined" &&
+//     token != undefined &&
+//     token != "" &&
+//     token
+//   ) {
+//     return;
+//   }
+//   setTimeout(() => {
+//     getTokenBearer();
+//   }, 500);
+// };
+
+//const endpoint = `${URLBase}api/Authenticate/login`;
+
+export const getUser = createAsyncThunk(
+  'auth/getUser',
+  async (payload, {dispatch})  => {
+    
+    try {
+      //console.log(JSON.stringify(body));
+      dispatch(setPending(true));
+      await delay(5);
+      const response = await fetch(payload.endpoint, {
+        method: "POST",
+        headers: {
+          //   "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload.body),
+      });
+      if (response.ok) {
+        const data = await response.json();
+        
+        localStorage.setItem('token',data.Token);
+        localStorage.setItem('role',data.Role);
+        localStorage.setItem('status',data.AccountStatus);
+        localStorage.setItem('id',data.AccountId);
+
+        dispatch(setPending(false));
+       // payload.history.push('/');
+        payload.history('/');
+        return data;
+      } else if (response.status === 400) {
+        dispatch(setPending(false));
+        const error = await response.json();
+        throw Error(error);
+      } 
+      else if (response.status === 401) {
+        dispatch(setPending(false));
+        payload.history('/');
+        const error = await response.json();
+        throw Error('Invalid account! Check credentials once again!');
+      }
+      else {
+        return emptyUser;
+      }
+    } catch (error) {
+      console.log(error);
+      throw Error(error);
+    }
+  },
+);
+
+export const setUser = createAsyncThunk(
+  'auth/setUser',
+  async (payload, { dispatch, getState }) => {
+    try {
+      const state = getState();
+      await delay(5);
+      const response = await fetch(payload.endpoint, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + localStorage.getItem('token'),
+        },
+        body: JSON.stringify(payload.body),
+      });
+      if (response.ok) {
+        dispatch(setLocalUser({ ...state.auth.user, ...payload.body }));
+      } else throw Error('The response was not ok');
+    } catch (error) {
+      console.log(error);
+      throw Error(error);
+    }
   }
-  setTimeout(() => {
-    getTokenBearer();
-  }, 500);
-};
+);
 
-export const authAPI = {
-  async login(email, password) {
-    localStorage.clear();
-
-    console.log(endpoints.login);
-
+export const logoutUser = createAsyncThunk(
+  'auth/logoutUser',
+  async (payload, { dispatch }) => {
     try {
-      const body = {
-        email: email,
-        password: password,
-      };
-      await delay(5);
-      const response = await fetch(endpoints.login, {
-        method: "POST",
-        headers: {
-          accept: "*/*",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      });
-      console.log(response);
-      if (response.ok) {
-        const data = await response.json();
-
-        return data;
-      } else if (response.status === 400) {
-        const error = await response.json();
-        throw Error(error);
-      } else {
-        return emptyUser;
-      }
+      localStorage.removeItem('token');
+      localStorage.removeItem('role');
+      localStorage.removeItem('status');
+      localStorage.removeItem('id');
+      payload.history('/login');
     } catch (error) {
       console.log(error);
       throw Error(error);
     }
-  },
-};
+  }
+);
 
-export const get_Users = {
-  async login() {
-    try {
-      await delay(5);
-      const response = await fetch(endpoints.get_users, {
-        method: "POST",
-        headers: {
-          accept: "*/*",
-          "Content-Type": "application/json",
-        },
-        // body: JSON.stringify(body),
-      });
-      console.log(response);
-      if (response.ok) {
-        const data = await response.json();
-
-        return data;
-      } else if (response.status === 400) {
-        const error = await response.json();
-        throw Error(error);
-      } else {
-        return emptyUser;
-      }
-    } catch (error) {
-      console.log(error);
-      throw Error(error);
-    }
+const auth = createSlice({
+  name: 'auth',
+  initialState,
+  reducers: {
+    setLocalUser(state, action) {
+      state.user = action.payload;
+    },
+    setRole(state, action) {
+      state.user.role = action.payload;
+    },
+    setStatus(state, action) {
+      state.user.status = action.payload;
+    },
+    setToken(state, action) {
+      state.user.token = action.payload;
+    },
+    setId(state, action) {
+      state.user.id = action.payload;
+    },
   },
-};
+  extraReducers: {
+    [getUser.pending]: (state, action) => {
+      state.loading = true;
+      state.error = null;
+    },
+    [getUser.fulfilled]: (state, action) => {
+      state.user = action.payload;
+      state.loading = false;
+    },
+    [getUser.rejected]: (state, action) => {
+      state.error = action.error.message;
+      console.log(state.error);
+      state.loading = false;
+    },
+    [setUser.pending]: (state, action) => {
+      state.loading = true;
+      state.error = null;
+    },
+    [setUser.fulfilled]: (state, action) => {
+      state.loading = false;
+    },
+    [setUser.rejected]: (state, action) => {
+      state.error = action.error.message;
+      state.loading = false;
+    },
+
+    [logoutUser.pending]: (state, action) => {
+      state.loading = true;
+      state.error = null;
+    },
+    [logoutUser.fulfilled]: (state, action) => {
+      state.isLoggedIn = false;
+      state.loading = false;
+    },
+    [logoutUser.rejected]: (state, action) => {
+      state.error = action.error.message;
+      state.loading = false;
+    },
+  },
+});
+
+export const { setLocalUser, setRole, setStatus, setToken, setId } = 
+  auth.actions;
+export default auth.reducer;

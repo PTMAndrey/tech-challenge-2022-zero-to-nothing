@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import image from "../../Assets/image.jpg";
-import { device } from "../DevicesSize/device";
+import { device } from "../DevicesSize/Device";
 
 const Styles = styled.img`
   height: 100vh;

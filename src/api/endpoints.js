@@ -1,9 +1,11 @@
-const URLBase = "https://localhost:7103/";
+const URLBase = "https://localhost:7103/api";
 
 const endpoints = {
-  base: `${URLBase}`,
-  get_users: `${URLBase}api/Authenticate/login`,
-  login: `${URLBase}api/Authenticate/login`,
+  base: URLBase,
+  login: URLBase+"/Authenticate/login",
+  add_users: URLBase+"/UserManagement/register-user",
+  get_users: URLBase+"/UserManagement/get-users",
+  update_user: URLBase+"/UserManagement/update-user",
 };
 
 export default endpoints;
