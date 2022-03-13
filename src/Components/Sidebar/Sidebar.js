@@ -65,9 +65,11 @@ const Sidebar = () => {
                         to={item.route}
                         >
                           <Link to={item.route}>
-                            {item.icon}
+                            <p>{item.icon}</p>
+                          </Link> 
+                          <Link to={item.route}>
                             <p>{item.label}</p>
-                            </Link>
+                          </Link>
                         </Item>
                     )) }
             </div>
@@ -158,7 +160,7 @@ const Item = styled.div`
 
   p {
     color: #62799d;
-    margin-left: 40px;
+    margin-left: 10px;
     font-size: 18px;
     font-weight: 600;
   }
