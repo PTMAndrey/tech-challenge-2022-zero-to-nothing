@@ -64,6 +64,9 @@ const Sidebar = () => {
                         key={item.label}
                         to={item.route}
                         >
+                         <Link to={item.route}>
+                            <p>{item.icon}</p>
+                          </Link> 
                           <Link to={item.route}>
                             <p>{item.icon}</p>
                           </Link> 
