@@ -45,7 +45,8 @@ const FilterBox = styled.select`
   padding-left: 16px;
   padding-right: 10px;
   width: 100%;
-  max-width: 102px;
+  //max-width: 102px;
+  max-width: 25%;
   background-color: white;
   outline: none;
   font-size: 14px;

@@ -17,8 +17,6 @@ const TableSkeleton = () => {
       <StyledSkeleton variant="rect" />
       <StyledSkeleton variant="rect" />
       <StyledSkeleton variant="rect" />
-      <StyledSkeleton variant="rect" />
-      <StyledSkeleton variant="rect" />
     </div>
   );
 };

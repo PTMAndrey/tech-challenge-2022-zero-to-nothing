@@ -1,138 +1,171 @@
-import styled from 'styled-components';
-import React, { useState, useEffect } from 'react';
-import {device} from '../../Components/DevicesSize/Device';
-import ButtonComponent from '../../Components/ButtonComponent/ButtonComponent';
-import TableSkeleton from '../../Components/TableSkeleton/TableSkeleton';
-import endpoints from '../../api/endpoints';
-import TableComponent from '../../Components/TableComponent/TableComponent';
-import Searchbar from '../../Components/Searchbar/Searchbar';
+import styled from "styled-components";
+import React, { useState, useEffect } from "react";
+import { device } from "../../Components/DevicesSize/Device";
+import ButtonComponent from "../../Components/ButtonComponent/ButtonComponent";
+import TableSkeleton from "../../Components/TableSkeleton/TableSkeleton";
+import endpoints from "../../api/endpoints";
+import TableComponent from "../../Components/TableComponent/TableComponent";
+import Searchbar from "../../Components/Searchbar/Searchbar";
+import UserModal from "../../Components/UserModal/UserModal";
 
 const Users = () => {
+  const [onSearch, setOnSearch] = useState("");
+  const [onFilter, setOnFilter] = useState("");
+  const [dataPending, setDataPending] = useState(false);
+  const [openAddModal, setOpenAddModal] = useState();
+  const [openEditModal, setOpenEditModal] = useState();
+  const [openDeleteModal, setOpenDeleteModal] = useState();
+  const [openReactivateModal, setOpenReactivateModal] = useState();
+  const [data, setData] = useState();
+  const [user, setUser] = useState();
+  const [refresh, setRefresh] = useState(false);
+  const [pagination, setPaginiation] = useState(1);
 
-    const [onSearch, setOnSearch] = useState('');
-    const [onFilter, setOnFilter] = useState('');  
-    const [dataPending, setDataPending] = useState(false);
-    const [openAddModal, setOpenAddModal] = useState();
-    const [openEditModal, setOpenEditModal] = useState();
-    const [openDeleteModal, setOpenDeleteModal] = useState();
-    const [data, setData] = useState();
-    const [user, setUser] = useState();
-    const [refresh, setRefresh] = useState(false);
-    const [pagination, setPaginiation] = useState(1);
-    
-    useEffect(() => {
-        setDataPending(true);
-        fetch(endpoints.get_users, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + localStorage.getItem('token'),
-          },
-        })
-          .then((response) => response.json())
-          .then((data) => handleGetUsers(data));
-      }, [refresh]);
+  useEffect(() => {
+    setDataPending(true);
+    fetch(endpoints.get_users, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => handleGetUsers(data));
+  }, [refresh]);
 
-    const handleGetUsers = (data) => {
-        data.message !== 'Unauthorized' && setData({ get_users : [...data] });
-        setDataPending(false);
-    };
-    const handleDeleteOpen = (email) => {
-        fetch(endpoints.get_user + `/${email}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + localStorage.getItem('token'),
-          },
-        })
-          .then((response) => response.json())
-          .then((data) => setUser(data));
-        setOpenDeleteModal(true);
-      };
-    const handleDeleteClose = () => {
-        setUser();
-        setOpenDeleteModal(false);
-    };
+  const handleGetUsers = (data) => {
+    data.message !== "Unauthorized" && setData({ get_users: [...data] });
+    setDataPending(false);
+  };
+  const handleDeleteOpen = (email) => {
+    fetch(endpoints.get_user + `/${email}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => setUser(data));
+    setOpenDeleteModal(true);
+  };
 
+  const handleReactivateOpen = (email) => {
+    fetch(endpoints.activate_user + `/${email}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => setUser(data));
+    setOpenReactivateModal(true);
+  };
 
-    const handleEditOpen = (email) => {
-        fetch(endpoints.get_user + `/${email}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: 'Bearer ' + localStorage.getItem('token'),
-          },
-        })
-          .then((response) => response.json())
-          .then((data) => setUser(data));
-        setOpenEditModal(true);
-    };
-    
+  const handleDeleteClose = () => {
+    setUser();
+    setOpenDeleteModal(false);
+  };
+
+  const handleReactivateClose = () => {
+    setUser();
+    setOpenReactivateModal(false);
+  };
+
+  const handleEditOpen = (email) => {
+    fetch(endpoints.get_user + `/${email}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => setUser(data));
+    setOpenEditModal(true);
+  };
+
   const handleEditClose = () => {
     setUser();
     setOpenEditModal(false);
   };
 
-    const handleAddOpen = () => {
-        setOpenAddModal(true);
-    };
-    
-    const handleAddClose = () => {
-        setOpenAddModal(false);
-    };
+  const handleAddOpen = () => {
+    setOpenAddModal(true);
+  };
 
-    const onSearchChange = (event) => {
-        setOnSearch(event.target.value);
-      };
-    
-      const onFilterChange = (event) => {
-        setOnFilter(event.target.selectedIndex);
-      };
-    
-      const handleRefreshChange = () => {
-        setRefresh(!refresh);
-      };
-    
+  const handleAddClose = () => {
+    setOpenAddModal(false);
+  };
 
-    return ( 
-        <Container>
-            <TopTable>
-                <ButtonComponent type='submit' onClick={handleAddOpen}>
-                    Add New
-                </ButtonComponent>
-                <Searchbar
-                searchChange={onSearchChange}
-                filterChange={onFilterChange}
-                page={'users'}
-                />
-                <ButtonComponent type='submit' >
+  const onSearchChange = (event) => {
+    setOnSearch(event.target.value);
+  };
+
+  const onFilterChange = (event) => {
+    setOnFilter(event.target.selectedIndex);
+  };
+
+  const handleRefreshChange = () => {
+    setRefresh(!refresh);
+  };
+
+  return (
+    <Container>
+      <TopTable>
+        <ButtonComponent type="submit" onClick={handleAddOpen}>
+          Add New
+        </ButtonComponent>
+        <Searchbar
+          searchChange={onSearchChange}
+          filterChange={onFilterChange}
+          page={"user"}
+        />
+        {/* <ButtonComponent type='submit' >
                     Re-activate
-                </ButtonComponent>
-            
-            </TopTable>
+                </ButtonComponent> */}
+      </TopTable>
 
-            {dataPending === true ? (
-                <TableSkeleton/>
-            ) : (
-                <TableComponent
-                    data={data?.get_users} // ask if first exist an array
-                    page={'user'}
-                    search={onSearch}
-                    filter={onFilter - 1}
-                    openDeleteModal={handleDeleteOpen}
-                    openEditModal={handleEditOpen}
-                    pagination={pagination}
-                    handleSetPagination={setPaginiation}
-                    
-                />
-            )}
+      {dataPending === true ? (
+        <TableSkeleton />
+      ) : (
+        <TableComponent
+          data={data?.get_users} // ask if first exist an array
+          page={"user"}
+          search={onSearch}
+          filter={onFilter - 1}
+          openDeleteModal={handleDeleteOpen}
+          openReactivateModal={handleReactivateOpen}
+          openEditModal={handleEditOpen}
+          pagination={pagination}
+          handleSetPagination={setPaginiation}
+        />
+      )}
+      {openAddModal === true && (
+        <UserModal  // in progress to be done
+          handleClose={handleAddClose}
+          open={openAddModal}
+          page='add'
+          refresh={handleRefreshChange}
+        />
+      )}
+      {openEditModal === true && (
+        <UserModal
+          handleClose={handleEditClose}
+          open={openEditModal}
+          edit={true}
+          data={user}
+          page='edit'
+          refresh={handleRefreshChange}
+        />
+      )}
+    </Container>
+  );
+};
 
-        </Container>
-     );
-}
- 
 export default Users;
-
 
 const Container = styled.div`
   max-width: 1160px;
@@ -145,7 +178,6 @@ const Container = styled.div`
     padding: 15px;
   }
 `;
-
 
 const TopTable = styled.div`
   display: flex;

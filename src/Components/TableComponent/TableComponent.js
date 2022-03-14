@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { RiDeleteBinLine } from "react-icons/ri";
+import { FiUserX } from "react-icons/fi";
+import { FiUserCheck } from "react-icons/fi";
 import { BiEditAlt } from "react-icons/bi";
 import { titles } from "../../Assets/Constants/Constants";
 import Pagination from "@material-ui/lab/Pagination";
@@ -13,19 +14,21 @@ const TableComponent = (props) => {
   const handlePaginationChange = (page) => {
     setPagination(page);
   };
-
+  console.log("data ==", data);
   const modifyUsersData = (data) => {
     let datas = [];
     data?.map((elem) =>
       datas.push({
-        id: elem.AccountID,
-        name: elem.FirstName + " " + elem.LastName,
-        type: elem.Role,
+        firstName: elem.FirstName,
+        lastName: elem.LastName,
+        email: elem.Email,
+        id: elem.AccountId,
+        role: elem.Role,
+        gender: elem.Gender,
         status: elem.AccountStatus,
+        remotePercentage: elem.RemotePercentage.toString(),
       })
     );
-
-    console.log("datas\n", datas);
     return datas;
   };
 
@@ -40,11 +43,11 @@ const TableComponent = (props) => {
   data?.filter(function (value) {
     if (filters > -1) {
       if (
-        value[titles[page][filters]]
+          value[titles[page][filters]]
           .toLowerCase()
           .includes(search?.toLowerCase())
       ) {
-         console.log("value", value);
+         
         filtered.push(value);
         
         return 0;
@@ -62,6 +65,7 @@ const TableComponent = (props) => {
   });
 
   console.log("props issues", props);
+  console.log("filtered", filtered);
   return (
     <PaginationAndTable>
       <Table>
@@ -80,29 +84,41 @@ const TableComponent = (props) => {
 
         <Tbody>
           {filtered
-            .slice((pagination - 1) * 5, (pagination - 1) * 5 + 5)
+            .slice((pagination - 1) * 3, (pagination - 1) * 3 + 3)
             .map((elem, key) => (
-              <Tr key={key}>
+              <Tr key={key}> 
                 {titles[page].map((title, key) => (
                   <Td key={key}>
-                    {String(elem[`${title}`][0]) +
-                      String(elem[`${title}`]).slice(1)}
+                    {elem[`${title}`] !== undefined &&
+                      elem[`${title}`] !== null &&
+                      String(elem[`${title}`]) }
                   </Td>
                 ))}
                 {localStorage.getItem("role") === "Administrator" && (
-                  <Td>
-                  {console.log(elem.Email, "-----\n")}
+                  <Td elem={elem}> 
                     <IconStyled>
-                      <BiEditAlt
+
+                    <BiEditAlt
                         size={24}
-                        onClick={() => props.openEditModal(elem.Email)}
+                        onClick={() =>{ props.openEditModal(elem.Email);}}
                         cursor="pointer"
                       />
-                      <RiDeleteBinLine
+
+
+                      { page==="user" && elem.status === "Inactive" ?
+                      <FiUserCheck
+                        size={24}
+                         onClick={() => props.openReactivateModal(elem.Email)}
+                        cursor="pointer"
+                      /> : 
+                      <FiUserX
                         size={24}
                         onClick={() => props.openDeleteModal(elem.Email)}
                         cursor="pointer"
-                      />
+                      />}
+
+                      
+                      
                     </IconStyled>
                   </Td>
                 )}
@@ -112,9 +128,9 @@ const TableComponent = (props) => {
       </Table>
       <StyledPagination
         count={
-          filtered.length % 5 === 0
-            ? parseInt(filtered.length) / 5
-            : parseInt(filtered.length / 5 + 1)
+          filtered.length % 3 === 0
+            ? parseInt(filtered.length) / 3
+            : parseInt(filtered.length / 3 + 1)
         }
         variant="outlined"
         shape="rounded"
@@ -177,7 +193,7 @@ const Trr = styled.tr`
 const TheadD = styled.td`
   border: 1px solid #0499ff;
   border-bottom: none;
-  padding-left: 55px;
+  padding-left: 25px;
   @media (max-width: 840px) {
     text-align: center;
     padding-left: 0px;
@@ -219,7 +235,7 @@ const Tr = styled.tr`
 `;
 
 const Td = styled.td`
-  padding-left: 55px;
+  padding-left: 25px;
   height: 80px;
   box-sizing: border-box;
   background: #ffffff;
