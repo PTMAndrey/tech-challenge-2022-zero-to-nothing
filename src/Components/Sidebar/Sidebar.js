@@ -68,6 +68,9 @@ const Sidebar = () => {
                             <p>{item.icon}</p>
                           </Link> 
                           <Link to={item.route}>
+                            <p>{item.icon}</p>
+                          </Link> 
+                          <Link to={item.route}>
                             <p>{item.label}</p>
                           </Link>
                         </Item>
@@ -123,7 +126,8 @@ const Container = styled.div`
       `}
 
     section {
-      padding-top: 90px;
+      width:100px;
+      height:100px;
     }
   }
 
@@ -133,7 +137,7 @@ const Item = styled.div`
   display: flex;
   align-items: center;
   height: 36px;
-  width: 200px; // 200px;
+  width: 200px; 
   margin: 10px 0;
   font-size: 18px;
   padding: 8px 12px;
@@ -160,7 +164,7 @@ const Item = styled.div`
 
   p {
     color: #62799d;
-    margin-left: 40px;
+    margin-left: 10px;
     font-size: 18px;
     font-weight: 600;
   }
@@ -171,7 +175,7 @@ const LogoutItem = styled.div`
   display: flex;
   align-items: center;
   height: 46px;
-  width: 280px;
+  width: 200px;
   margin: 8px 0;
   font-size: 18px;
   padding: 8px 24px;
