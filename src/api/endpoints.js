@@ -9,6 +9,7 @@ const endpoints = {
   update_user: URLBase+"/UserManagement/update-user",
   activate_user: URLBase+"/UserManagement/update-activate-user",
   deactivate_user: URLBase+"/UserManagement/update-deactivate-user",
+  get_buildings: URLBase+"/BuildingsManagement/get-buildings",
 };
 
 export default endpoints;
