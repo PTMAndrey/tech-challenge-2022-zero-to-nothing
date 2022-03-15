@@ -24,6 +24,7 @@ function delay(t, v) {
 const Dashboard = () => {
   const [data, setData] = useState();
   const [buildings, setBuildings] = useState([]);
+  const [floor, setFloor] = useState([]);
   const [refresh, setRefresh] = useState();
   const [dataPending, setDataPending] = useState(false);
   const [isValid, setIsValid] = useState(false);
@@ -53,10 +54,6 @@ const Dashboard = () => {
     setBuildings([...data]);
     console.log(buildings);
   };
-
-  function getItem(item) {
-    return item;
-  }
 
   const onSubmit = async (data) => {
     console.log(data);

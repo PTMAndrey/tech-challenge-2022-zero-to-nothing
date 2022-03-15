@@ -162,7 +162,7 @@ export const getBuilding = createAsyncThunk(
         const error = await response.json();
         throw Error("Invalid request! There are no registered buildings.");
       } else {
-        return emptyUser;
+        return [];
       }
     } catch (error) {
       console.log(error);
