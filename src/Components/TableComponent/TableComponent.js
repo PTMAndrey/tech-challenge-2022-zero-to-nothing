@@ -26,7 +26,7 @@ const TableComponent = (props) => {
         role: elem.Role,
         gender: elem.Gender,
         status: elem.AccountStatus,
-        remotePercentage: elem.RemotePercentage.toString()+"%",,
+        remotePercentage: elem.RemotePercentage.toString()+"%",
       })
     );
     return datas;
