@@ -82,7 +82,7 @@ export const getUser = createAsyncThunk(
       });
       if (response.ok) {
         const data = await response.json();
-        
+        console.log(data);
         localStorage.setItem('token',data.Token);
         localStorage.setItem('role',data.Role);
         localStorage.setItem('status',data.AccountStatus);
@@ -113,23 +113,21 @@ export const getUser = createAsyncThunk(
   },
 );
 
-export const setUser = createAsyncThunk(
-  'auth/setUser',
-  async (payload, { dispatch, getState }) => {
+export const addUser = createAsyncThunk(
+  'auth/addUser',
+  async (payload, { dispatch }) => {
     try {
-      const state = getState();
-      await delay(5);
       const response = await fetch(payload.endpoint, {
-        method: 'PUT',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + localStorage.getItem('token'),
         },
         body: JSON.stringify(payload.body),
       });
       if (response.ok) {
-        dispatch(setLocalUser({ ...state.auth.user, ...payload.body }));
-      } else throw Error('The response was not ok');
+        console.log('User added successfully');
+        payload.history('/user');
+      }
     } catch (error) {
       console.log(error);
       throw Error(error);
@@ -187,14 +185,14 @@ const auth = createSlice({
       console.log(state.error);
       state.loading = false;
     },
-    [setUser.pending]: (state, action) => {
+    [addUser.pending]: (state, action) => {
       state.loading = true;
       state.error = null;
     },
-    [setUser.fulfilled]: (state, action) => {
+    [addUser.fulfilled]: (state, action) => {
       state.loading = false;
     },
-    [setUser.rejected]: (state, action) => {
+    [addUser.rejected]: (state, action) => {
       state.error = action.error.message;
       state.loading = false;
     },
