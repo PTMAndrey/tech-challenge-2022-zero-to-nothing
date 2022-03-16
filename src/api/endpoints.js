@@ -10,11 +10,11 @@ const endpoints = {
   activate_user: URLBase+"/UserManagement/update-activate-user",
   deactivate_user: URLBase+"/UserManagement/update-deactivate-user",
   
-  get_buildings: URLBase+"/BuildingsManagement/get-buildings",
-  get_building_by_name: URLBase+"/BuildingsManagement/get-building-by-name",
-  add_buildings: URLBase+"/BuildingsManagement/add-buildings",
-  update_buildings: URLBase+"/BuildingsManagement/update-buildings",
-  delete_building: URLBase+"/BuildingsManagement/delete-building",
+  get_buildings: URLBase+"/Building/get-buildings",
+  get_building_by_name: URLBase+"/Building/get-building-by-name",
+  add_buildings: URLBase+"/Building/add-buildings",
+  update_buildings: URLBase+"/Building/update-buildings",
+  delete_building: URLBase+"/Building/delete-building",
 
   
 
