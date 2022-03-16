@@ -7,15 +7,15 @@ import endpoints from "../../api/endpoints";
 import TableComponent from "../../Components/TableComponent/TableComponent";
 import Searchbar from "../../Components/Searchbar/Searchbar";
 import UserModal from "../../Components/UserModal/UserModal";
-
+function refreshPage() {
+  window.location.reload(false);
+}
 const Users = () => {
   const [onSearch, setOnSearch] = useState("");
   const [onFilter, setOnFilter] = useState("");
   const [dataPending, setDataPending] = useState(false);
   const [openAddModal, setOpenAddModal] = useState();
   const [openEditModal, setOpenEditModal] = useState();
-  const [openDeleteModal, setOpenDeleteModal] = useState();
-  const [openReactivateModal, setOpenReactivateModal] = useState();
   const [data, setData] = useState();
   const [user, setUser] = useState();
   const [refresh, setRefresh] = useState(false);
@@ -38,9 +38,12 @@ const Users = () => {
     data.message !== "Unauthorized" && setData({ get_users: [...data] });
     setDataPending(false);
   };
-  const handleDeleteOpen = (email) => {
-    fetch(endpoints.get_user + `/${email}`, {
-      method: "GET",
+  const handleDeactivateOpen = (email) => {
+    fetch(endpoints.deactivate_user + `/${email}`, {
+      method: "PUT",
+      body: JSON.stringify({
+        Status: "Inactive",
+      }),
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + localStorage.getItem("token"),
@@ -48,12 +51,16 @@ const Users = () => {
     })
       .then((response) => response.json())
       .then((data) => setUser(data));
-    setOpenDeleteModal(true);
+    refreshPage();
+    setRefresh(true);
   };
 
   const handleReactivateOpen = (email) => {
     fetch(endpoints.activate_user + `/${email}`, {
-      method: "GET",
+      method: "PUT",
+      body: JSON.stringify({
+        Status: "Active",
+      }),
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + localStorage.getItem("token"),
@@ -61,18 +68,11 @@ const Users = () => {
     })
       .then((response) => response.json())
       .then((data) => setUser(data));
-    setOpenReactivateModal(true);
+      
+    refreshPage();
   };
 
-  const handleDeleteClose = () => {
-    setUser();
-    setOpenDeleteModal(false);
-  };
 
-  const handleReactivateClose = () => {
-    setUser();
-    setOpenReactivateModal(false);
-  };
 
   const handleEditOpen = (email) => {
     fetch(endpoints.get_user + `/${email}`, {
@@ -136,11 +136,13 @@ const Users = () => {
           page={"user"}
           search={onSearch}
           filter={onFilter - 1}
-          openDeleteModal={handleDeleteOpen}
+          openDeactivateModal={handleDeactivateOpen}
           openReactivateModal={handleReactivateOpen}
           openEditModal={handleEditOpen}
           pagination={pagination}
           handleSetPagination={setPaginiation}
+          
+          refresh={handleRefreshChange}
         />
       )}
       {openAddModal === true && (
