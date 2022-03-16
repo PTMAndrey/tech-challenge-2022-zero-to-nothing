@@ -97,10 +97,10 @@ const TableComponent = (props) => {
                 {localStorage.getItem("role") === "Administrator" && (
                   <Td elem={elem}> 
                     <IconStyled>
-
+                    {console.log(elem.email)}
                     <BiEditAlt
                         size={24}
-                        onClick={() =>{ props.openEditModal(elem.Email);}}
+                        onClick={() =>{ props.openEditModal(elem.email);}}
                         cursor="pointer"
                       />
 
@@ -108,12 +108,12 @@ const TableComponent = (props) => {
                       { page==="user" && elem.status === "Inactive" ?
                       <FiUserCheck
                         size={24}
-                         onClick={() => props.openReactivateModal(elem.Email)}
+                         onClick={() => props.openReactivateModal(elem.email)}
                         cursor="pointer"
                       /> : 
                       <FiUserX
                         size={24}
-                        onClick={() => props.openDeleteModal(elem.Email)}
+                        onClick={() => props.openDeactivateModal(elem.email)}
                         cursor="pointer"
                       />}
 
