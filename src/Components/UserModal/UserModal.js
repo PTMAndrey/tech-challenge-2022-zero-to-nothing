@@ -40,11 +40,11 @@ const UserModal = (props) => {
     email.current.value = props.data.Email;
     first_name.current.value = props.data.FirstName;
     last_name.current.value = props.data.LastName;
-    password.current.value = props.data.Password;
+    // password.current.value = props.data.Password;
     role.current.selectedIndex = props.data.Role;
     gender.current.selectedIndex = props.data.Gender;
     birth_date.current.value = props.data.BirthDate;
-    nationality.current.value = props.data.Nationality;
+    nationality.current.selectedIndex = props.data.Nationality;
   }
 
   const [errors, setErrors] = useState({
@@ -68,7 +68,9 @@ const UserModal = (props) => {
 
   const handlePasswordErrors = () => {
     let passwordInput = password.current.value;
-    if (passwordInput === "") return "Password is a required field!";
+    if (passwordInput === "") 
+      return "Password is a required field!";
+    
     return " ";
   };
   const handleFirstNameErrors = () => {
@@ -118,6 +120,42 @@ const UserModal = (props) => {
     })
       .then((response) => {
         response.json();
+        console.log(birth_date.current.value);
+      })
+      .then(
+        () =>
+          new Promise(() =>
+            setTimeout(() => {
+              props.refresh();
+              props.handleClose();
+            }, 5)
+          )
+      );
+  };
+
+  const editUser = () => {
+    fetch(endpoints.update_user, {
+      method: 'PUT',
+      body: JSON.stringify({
+        Email: email.current.value,
+        // Password: password.current.value,
+        FirstName: first_name.current.value,
+        LastName: last_name.current.value,
+        Role: role.current.selectedIndex-1,
+        Gender: gender.current.selectedIndex-1,
+        //BirthDate: '2000-12-21',
+       // Nationality: "Romanian",
+        //BirthDate: birth_date.current.value,
+        Nationality: nationality.current.selectedIndex-1
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + localStorage.getItem('token'),
+      },
+    })
+      .then((response) => {
+        response.json();
+        console.log(birth_date.current.value);
       })
       .then(
         () =>
@@ -141,10 +179,18 @@ const UserModal = (props) => {
       role: []
     };
 
-    let emailError = handleEmailErrors();
+    let emailError ;
+    if( props.page === "edit")
+      emailError=" ";
+    else
+      emailError = handleEmailErrors();
     emailError !== " " && error.email.push(emailError);
-
-    let passwordError = handlePasswordErrors();
+    
+    let passwordError;
+    if( props.page === "edit")
+      passwordError=" ";
+    else
+      passwordError = handlePasswordErrors();
     passwordError !== " " && error.password.push(passwordError);
 
     let first_nameError = handleFirstNameErrors();
@@ -166,7 +212,7 @@ const UserModal = (props) => {
       if (props.page === "add") {
         addUser();
       } else {
-        //editUser();
+        editUser();
       }
     }
     setErrors(error);
@@ -206,6 +252,7 @@ const UserModal = (props) => {
                   type="text"
                   id="first-name"
                   ref={first_name}
+                  //defaultValue={props.FirstName}
                   error={showBorders && errors.first_name.length > 0}
                   validated={showBorders && errors.first_name.length === 0}
                   data-for="first_name"
@@ -221,6 +268,15 @@ const UserModal = (props) => {
                   }
                 />
                 <LabelComponent htmlFor="email">Email</LabelComponent>
+                {props.page === "edit" ?
+                <FormsInputComponent
+                  id="email"
+                  ref={email}
+                  disabled
+                  data-for="email"
+                 />
+
+                :
                 <FormsInputComponent
                   type="text"
                   id="email"
@@ -230,6 +286,8 @@ const UserModal = (props) => {
                   data-for="email"
                   data-tip={`${errors.email[0] ? errors.email : ""}`}
                 />
+                
+                }
                 <ReactTooltip
                   id="email"
                   type="error"
@@ -259,6 +317,7 @@ const UserModal = (props) => {
                     errors.last_name[0] ? errors.last_name : ""
                   }
                 />
+                {props.page === "edit" ? null : <div>
                 <LabelComponent htmlFor="password">Password</LabelComponent>
                 <PasswordInput>
                 <FormsInputComponent
@@ -282,9 +341,11 @@ const UserModal = (props) => {
                   effect="solid"
                   place="right"
                   getContent={() => (errors.password[0] ? errors.password : "")}
-                />
+                /></div>}
               </InputsContainer>
             </InputsSideContainer>
+
+            
             <UnderContainer>
               <InputsSideContainer>
                 <InputsContainer>
@@ -358,7 +419,6 @@ const UserModal = (props) => {
                     name="nationality"
                     placeholder="placeholder"
                     ref={nationality}
-                   
                     data-for="nationality"
                   >
                     <option value="placeholder" hidden>
