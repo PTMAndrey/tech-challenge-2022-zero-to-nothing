@@ -5,6 +5,7 @@ import { FiUserCheck } from "react-icons/fi";
 import { BiEditAlt } from "react-icons/bi";
 import { titles } from "../../Assets/Constants/Constants";
 import Pagination from "@material-ui/lab/Pagination";
+import {AiOutlineDelete} from "react-icons/ai";
 
 const TableComponent = (props) => {
   var data = props.data;
@@ -15,6 +16,7 @@ const TableComponent = (props) => {
     setPagination(page);
   };
   console.log("data ==", data);
+  
   const modifyUsersData = (data) => {
     let datas = [];
     data?.map((elem) =>
@@ -32,9 +34,27 @@ const TableComponent = (props) => {
     return datas;
   };
 
+
+  const modifyBuildingsData = (data) => {
+    let datas = [];
+    data?.map((elem) =>
+      datas.push({
+        name: elem.Name,
+        floorCount: elem.FloorCount,
+        buildingAddress: elem.BuildingAddress,
+      })
+    );
+    return datas;
+  };
+
+
+  
   if (page === "user") {
     data = modifyUsersData(data);
   }
+
+  if(page === "buildings")
+    data = modifyBuildingsData(data);
 
   const search = props.search;
   var filters = props.filter;
@@ -97,26 +117,62 @@ const TableComponent = (props) => {
                 {localStorage.getItem("role") === "Administrator" && (
                   <Td elem={elem}> 
                     <IconStyled>
-                    {console.log(elem.email)}
-                    <BiEditAlt
+                      
+                    {page==="user" ? (
+                    // ///////////////////////////////////
+                    //    Quick Options for User
+                    // ///////////////////////////////////
+                      <div>
+                      <BiEditAlt
                         size={24}
-                        onClick={() =>{ props.openEditModal(elem.email);}}
+                        onClick={() =>{ props.openEditModal(elem.Email);}}
                         cursor="pointer"
                       />
-
-
-                      { page==="user" && elem.status === "Inactive" ?
+                      
+                      {elem.Role === localStorage.getItem("role") ? null :
+                      ( page==="user" && elem.status === "Inactive" ?
                       <FiUserCheck
                         size={24}
-                         onClick={() => props.openReactivateModal(elem.email)}
+                         onClick={() => props.openReactivateModal(elem.Email)}
                         cursor="pointer"
                       /> : 
                       <FiUserX
                         size={24}
-                        onClick={() => props.openDeactivateModal(elem.email)}
+                        onClick={() => props.openDeleteModal(elem.Email)}
                         cursor="pointer"
-                      />}
-
+                      />)
+                    }
+                    </div>
+                    ) :
+                    (page === "buildings" ? (
+                    /////////////////////////////////////
+                    //    Quick Options for Buildings
+                    /////////////////////////////////////
+                    <div>
+                    <BiEditAlt
+                      size={24}
+                      onClick={() =>{ props.openEditModal(elem.Name);}}
+                      cursor="pointer"
+                    />
+                    <AiOutlineDelete 
+                      size={24}
+                      onClick={() => props.openDeleteModal(elem.Name)}
+                      cursor="pointer"/>
+                                {/* {elem.Role === localStorage.getItem("role") ? null :
+                                ( page==="user" && elem.status === "Inactive" ?
+                                <FiUserCheck
+                                  size={24}
+                                  onClick={() => props.openReactivateModal(elem.Email)}
+                                  cursor="pointer"
+                                /> : 
+                                <FiUserX
+                                  size={24}
+                                  onClick={() => props.openDeleteModal(elem.Email)}
+                                  cursor="pointer"
+                                />)
+                              } */}
+                  </div>
+                ) : null )}
                       
                       
                     </IconStyled>
