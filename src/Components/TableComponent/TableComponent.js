@@ -6,17 +6,19 @@ import { BiEditAlt } from "react-icons/bi";
 import { titles } from "../../Assets/Constants/Constants";
 import Pagination from "@material-ui/lab/Pagination";
 
+import {useLocation} from 'react-router-dom';
 import {AiOutlineDelete} from "react-icons/ai";
 
 const TableComponent = (props) => {
   var data = props.data;
   const page = props.page;
+  const location = useLocation().pathname;
   const [pagination, setPagination] = useState(1);
 
   const handlePaginationChange = (page) => {
     setPagination(page);
   };
-  console.log("data ==", data);
+  console.log("data =>", data);
   const modifyUsersData = (data) => {
     let datas = [];
     data?.map((elem) =>
@@ -53,6 +55,9 @@ const TableComponent = (props) => {
     data = modifyUsersData(data);
   }
 
+  if (page === "users") {
+    data = modifyUsersData(data);
+  }
 
   if(page === "buildings")
     data = modifyBuildingsData(data);
@@ -84,9 +89,7 @@ const TableComponent = (props) => {
 
     return 1;
   });
-
-  console.log("props issues", props);
-  console.log("filtered", filtered);
+console.log()
   return (
     <PaginationAndTable>
       <Table>
@@ -97,7 +100,8 @@ const TableComponent = (props) => {
                 {elem.charAt(0).toUpperCase() + elem.slice(1)}
               </TheadD>
             ))}
-            {localStorage.getItem("role") === "Administrator" && (
+            
+            {localStorage.getItem("role") === "Administrator" && location !== "/users" && (
               <TheadD>Quick Actions</TheadD>
             )}
           </Trr>
@@ -115,7 +119,7 @@ const TableComponent = (props) => {
                       String(elem[`${title}`]) }
                   </Td>
                 ))}
-                {localStorage.getItem("role") === "Administrator" && (
+                {localStorage.getItem("role") === "Administrator"&& location !== "/users" && (
                   <Td elem={elem}> 
                     <IconStyled>
                       

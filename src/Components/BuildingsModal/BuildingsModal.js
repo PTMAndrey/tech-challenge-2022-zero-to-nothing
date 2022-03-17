@@ -73,7 +73,7 @@ const BuildingsModal = (props) => {
       method: 'POST',
       body: JSON.stringify({
         Name: name.current.value,
-        FloorCount: floorCount.current.selectedIndex-1,
+        FloorCount: floorCount.current.selectedIndex,
         BuildingAddress: address.current.value,
       }),
       headers: {

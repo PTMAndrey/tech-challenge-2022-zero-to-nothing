@@ -30,7 +30,7 @@ const Routing = () => {
       <Route
         path="/login"
         exact
-        element={role === null ? <LoginPage /> : <Navigate to="/login" />}
+        element={role === null ? <LoginPage /> : <Navigate to="/" />}
       />
 
       <Route
