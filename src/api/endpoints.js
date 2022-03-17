@@ -9,7 +9,6 @@ const endpoints = {
   update_user: URLBase+"/UserManagement/update-user",
   activate_user: URLBase+"/UserManagement/update-activate-user",
   deactivate_user: URLBase+"/UserManagement/update-deactivate-user",
-  
   get_buildings: URLBase+"/Building/get-buildings",
   get_building_by_name: URLBase+"/Building/get-building-by-name",
   add_buildings: URLBase+"/Building/add-buildings",
