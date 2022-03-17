@@ -145,7 +145,7 @@ const UserModal = (props) => {
         Gender: gender.current.selectedIndex-1,
         //BirthDate: '2000-12-21',
        // Nationality: "Romanian",
-        //BirthDate: birth_date.current.value,
+        BirthDate: birth_date.current.value,
         Nationality: nationality.current.selectedIndex-1
       }),
       headers: {
