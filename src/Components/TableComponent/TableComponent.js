@@ -129,16 +129,16 @@ const TableComponent = (props) => {
                         cursor="pointer"
                       />
                       
-                      {elem.Role === localStorage.getItem("role") ? null :
+                      {elem.role === localStorage.getItem("role") ? null :
                       ( page==="user" && elem.status === "Inactive" ?
                       <FiUserCheck
                         size={24}
-                         onClick={() => props.openReactivateModal(elem.Email)}
+                         onClick={() => props.openReactivateModal(elem.email)}
                         cursor="pointer"
                       /> : 
                       <FiUserX
                         size={24}
-                        onClick={() => props.openDeleteModal(elem.Email)}
+                        onClick={() => props.openDeleteModal(elem.email)}
                         cursor="pointer"
                       />)
                     }
