@@ -6,6 +6,8 @@ import { BiEditAlt } from "react-icons/bi";
 import { titles } from "../../Assets/Constants/Constants";
 import Pagination from "@material-ui/lab/Pagination";
 
+import {AiOutlineDelete} from "react-icons/ai";
+
 const TableComponent = (props) => {
   var data = props.data;
   const page = props.page;
@@ -19,6 +21,7 @@ const TableComponent = (props) => {
     let datas = [];
     data?.map((elem) =>
       datas.push({
+        id : elem.AccountId,
         firstName: elem.FirstName,
         lastName: elem.LastName,
         email: elem.Email,
@@ -97,15 +100,20 @@ const TableComponent = (props) => {
                 {localStorage.getItem("role") === "Administrator" && (
                   <Td elem={elem}> 
                     <IconStyled>
-                    {console.log(elem.email)}
-                    <BiEditAlt
+                      
+                    {page==="user" ? (
+                    // ///////////////////////////////////
+                    //    Quick Options for User
+                    // ///////////////////////////////////
+                      <div>
+                      <BiEditAlt
                         size={24}
                         onClick={() =>{ props.openEditModal(elem.email);}}
                         cursor="pointer"
                       />
-
-
-                      { page==="user" && elem.status === "Inactive" ?
+                      
+                      {elem.id === localStorage.getItem("id") ? null :
+                      ( page==="user" && elem.status === "Inactive" ?
                       <FiUserCheck
                         size={24}
                          onClick={() => props.openReactivateModal(elem.email)}
@@ -113,11 +121,41 @@ const TableComponent = (props) => {
                       /> : 
                       <FiUserX
                         size={24}
-                        onClick={() => props.openDeactivateModal(elem.email)}
+                        onClick={() => props.openDeleteModal(elem.email)}
                         cursor="pointer"
-                      />}
-
-                      
+                      />)
+                    }
+                    </div>
+                    ) :
+                    (page === "buildings" ? (
+                    /////////////////////////////////////
+                    //    Quick Options for Buildings
+                    /////////////////////////////////////
+                    <div>
+                    <BiEditAlt
+                      size={24}
+                      onClick={() =>{ props.openEditModal(elem.Name);}}
+                      cursor="pointer"
+                    />
+                    <AiOutlineDelete 
+                      size={24}
+                      onClick={() => props.openDeleteModal(elem.Name)}
+                      cursor="pointer"/>
+                                {/* {elem.Role === localStorage.getItem("role") ? null :
+                                ( page==="user" && elem.status === "Inactive" ?
+                                <FiUserCheck
+                                  size={24}
+                                  onClick={() => props.openReactivateModal(elem.Email)}
+                                  cursor="pointer"
+                                /> : 
+                                <FiUserX
+                                  size={24}
+                                  onClick={() => props.openDeleteModal(elem.Email)}
+                                  cursor="pointer"
+                                />)
+                              } */}
+                  </div>
+                ) : null )}
                       
                     </IconStyled>
                   </Td>
