@@ -68,7 +68,7 @@ const BuildingsModal = (props) => {
     return " ";
   };
 
-  const addUser = () => {
+  const addBuilding = () => {
     fetch(endpoints.add_buildings, {
       method: 'POST',
       body: JSON.stringify({
@@ -95,7 +95,7 @@ const BuildingsModal = (props) => {
       );
   };
 
-  const editUser = () => {
+  const editBuilding = () => {
     fetch(endpoints.update_buildings, {
       method: 'PUT',
       body: JSON.stringify({
@@ -148,10 +148,9 @@ const BuildingsModal = (props) => {
       error.address.length === 0
     ) {
       if (props.page === "add") {
-        addUser();
+        addBuilding();
       } else {
-
-        editUser();
+        editBuilding();
       }
     }
     setErrors(error);

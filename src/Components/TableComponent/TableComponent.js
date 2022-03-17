@@ -129,7 +129,6 @@ const TableComponent = (props) => {
                         onClick={() =>{ props.openEditModal(elem.email);}}
                         cursor="pointer"
                       />
-                      
                       {elem.id === localStorage.getItem("id") ? null :
                       ( page==="user" && elem.status === "Inactive" ?
                       <FiUserCheck
@@ -140,6 +139,7 @@ const TableComponent = (props) => {
                       <FiUserX
                         size={24}
                         onClick={() => props.openDeactivateModal(elem.email)}
+
                         cursor="pointer"
                       />)
                     }
