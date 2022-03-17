@@ -5,6 +5,7 @@ import { FiUserCheck } from "react-icons/fi";
 import { BiEditAlt } from "react-icons/bi";
 import { titles } from "../../Assets/Constants/Constants";
 import Pagination from "@material-ui/lab/Pagination";
+
 import {AiOutlineDelete} from "react-icons/ai";
 
 const TableComponent = (props) => {
@@ -16,11 +17,11 @@ const TableComponent = (props) => {
     setPagination(page);
   };
   console.log("data ==", data);
-  
   const modifyUsersData = (data) => {
     let datas = [];
     data?.map((elem) =>
       datas.push({
+        id : elem.AccountId,
         firstName: elem.FirstName,
         lastName: elem.LastName,
         email: elem.Email,
@@ -33,12 +34,12 @@ const TableComponent = (props) => {
     );
     return datas;
   };
-
-
+  
   const modifyBuildingsData = (data) => {
     let datas = [];
     data?.map((elem) =>
       datas.push({
+        buildingId: elem.BuildingId,
         name: elem.Name,
         floorCount: elem.FloorCount,
         buildingAddress: elem.BuildingAddress,
@@ -48,14 +49,14 @@ const TableComponent = (props) => {
   };
 
 
-  
   if (page === "user") {
     data = modifyUsersData(data);
   }
 
+
   if(page === "buildings")
     data = modifyBuildingsData(data);
-
+	
   const search = props.search;
   var filters = props.filter;
 
@@ -125,20 +126,20 @@ const TableComponent = (props) => {
                       <div>
                       <BiEditAlt
                         size={24}
-                        onClick={() =>{ props.openEditModal(elem.Email);}}
+                        onClick={() =>{ props.openEditModal(elem.email);}}
                         cursor="pointer"
                       />
                       
-                      {elem.Role === localStorage.getItem("role") ? null :
+                      {elem.id === localStorage.getItem("id") ? null :
                       ( page==="user" && elem.status === "Inactive" ?
                       <FiUserCheck
                         size={24}
-                         onClick={() => props.openReactivateModal(elem.Email)}
+                         onClick={() => props.openReactivateModal(elem.email)}
                         cursor="pointer"
                       /> : 
                       <FiUserX
                         size={24}
-                        onClick={() => props.openDeleteModal(elem.Email)}
+                        onClick={() => props.openDeactivateModal(elem.email)}
                         cursor="pointer"
                       />)
                     }
@@ -151,29 +152,15 @@ const TableComponent = (props) => {
                     <div>
                     <BiEditAlt
                       size={24}
-                      onClick={() =>{ props.openEditModal(elem.Name);}}
+                      onClick={() =>{ props.openEditModal(elem.name);}}
                       cursor="pointer"
                     />
                     <AiOutlineDelete 
                       size={24}
-                      onClick={() => props.openDeleteModal(elem.Name)}
+                      onClick={() => props.openDeleteModal(elem.name)}
                       cursor="pointer"/>
-                                {/* {elem.Role === localStorage.getItem("role") ? null :
-                                ( page==="user" && elem.status === "Inactive" ?
-                                <FiUserCheck
-                                  size={24}
-                                  onClick={() => props.openReactivateModal(elem.Email)}
-                                  cursor="pointer"
-                                /> : 
-                                <FiUserX
-                                  size={24}
-                                  onClick={() => props.openDeleteModal(elem.Email)}
-                                  cursor="pointer"
-                                />)
-                              } */}
                   </div>
                 ) : null )}
-                      
                       
                     </IconStyled>
                   </Td>

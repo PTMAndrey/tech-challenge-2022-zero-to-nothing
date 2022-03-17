@@ -50,7 +50,10 @@ const BuildingsModal = (props) => {
 
   const handleFloorInputErrors = () => {
     let floorInput = floorCount.current.value;
-    if (floorInput === "placeholder") return "Floor is a required field!";
+    if(props.page === "add" && floorInput === "placeholder") 
+        return "Floor is a required field!";
+    if(props.page === "edit" && floorInput === "placeholder")
+        floorCount.current.selectedIndex = props.data.FloorCount;
     return " ";
   };
 
@@ -95,8 +98,9 @@ const BuildingsModal = (props) => {
     fetch(endpoints.update_buildings, {
       method: 'PUT',
       body: JSON.stringify({
+        BuildingId: props.data.BuildingId,
         Name: name.current.value,
-        FloorCount: floorCount.current.selectedIndex-1,
+        FloorCount: floorCount.current.selectedIndex,
         BuildingAddress: address.current.value,
       }),
       headers: {
@@ -230,6 +234,9 @@ const BuildingsModal = (props) => {
                   <option value="placeholder" hidden>
                     Floor
                   </option>
+                  <option>1</option>
+                  <option>2</option>
+                  <option>3</option>
                   <option>4</option>
                   <option>5</option>
                   <option>6</option>

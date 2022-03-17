@@ -9,10 +9,6 @@ import Searchbar from "../../Components/Searchbar/Searchbar";
 import BuildingsModal from "../../Components/BuildingsModal/BuildingsModal";
 
 
-
-
-
-
 function refreshPage() {
   window.location.reload(false);
 }

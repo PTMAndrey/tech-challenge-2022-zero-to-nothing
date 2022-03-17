@@ -43,7 +43,7 @@ const UserModal = (props) => {
     // password.current.value = props.data.Password;
     role.current.selectedIndex = props.data.Role;
     gender.current.selectedIndex = props.data.Gender;
-    birth_date.current.value = props.data.BirthDate;
+    //birth_date.current.value = props.data.BirthDate;
     nationality.current.selectedIndex = props.data.Nationality;
   }
 
@@ -97,6 +97,16 @@ const UserModal = (props) => {
     return " ";
   };
 
+  const handleGenderErrors = () => {
+    let genderInput = gender.current.value;
+    if( genderInput === "placeholder"){
+      gender.current.selectedIndex = props.data.Gender;
+      return " ";
+    }
+    return 
+
+  }
+  
 
   const addUser = () => {
     fetch(endpoints.add_user, {
@@ -110,7 +120,7 @@ const UserModal = (props) => {
         Gender: gender.current.selectedIndex-1,
         //BirthDate: '2000-12-21',
        // Nationality: "Romanian",
-        BirthDate: birth_date.current.value,
+        //BirthDate: birth_date.current.value,
         Nationality: nationality.current.selectedIndex-1,
       }),
       headers: {
@@ -120,7 +130,6 @@ const UserModal = (props) => {
     })
       .then((response) => {
         response.json();
-        console.log(birth_date.current.value);
       })
       .then(
         () =>
@@ -137,16 +146,20 @@ const UserModal = (props) => {
     fetch(endpoints.update_user, {
       method: 'PUT',
       body: JSON.stringify({
+        AccountId: props.data.AccountId,
+        AccountStatus: props.data.AccountStatus,
+
         Email: email.current.value,
-        // Password: password.current.value,
+        // Password: props.data.Password,
         FirstName: first_name.current.value,
         LastName: last_name.current.value,
         Role: role.current.selectedIndex-1,
-        Gender: gender.current.selectedIndex-1,
-        //BirthDate: '2000-12-21',
+        Gender: gender.current.selectedIndex,
+        BirthDate: props.data.BirthDate,
+        RemotePercentage: props.data.RemotePercentage,
        // Nationality: "Romanian",
         //BirthDate: birth_date.current.value,
-        Nationality: nationality.current.selectedIndex-1
+        Nationality: nationality.current.selectedIndex-1,
       }),
       headers: {
         'Content-Type': 'application/json',
@@ -154,8 +167,7 @@ const UserModal = (props) => {
       },
     })
       .then((response) => {
-        response.json();
-        console.log(birth_date.current.value);
+        console.log(response.json());
       })
       .then(
         () =>
@@ -167,7 +179,8 @@ const UserModal = (props) => {
           )
       );
   };
-  
+
+ 
   const handleErrors = (whereToSend) => {
     console.log("am ajuns in handleerrors");
     setShowBorders(true);
@@ -176,7 +189,8 @@ const UserModal = (props) => {
       password: [],
       first_name: [],
       last_name: [],
-      role: []
+      role: [],
+      gender: []
     };
 
     let emailError ;
@@ -212,6 +226,7 @@ const UserModal = (props) => {
       if (props.page === "add") {
         addUser();
       } else {
+        let genderError = handleGenderErrors();
         editUser();
       }
     }
@@ -397,7 +412,7 @@ const UserModal = (props) => {
                   />
                 </InputsContainer>
 
-                <InputsContainer>
+                {/* <InputsContainer>
                   <LabelComponent>BirthDate</LabelComponent>
                   <FormsInputComponent
                   type="date"
@@ -411,7 +426,7 @@ const UserModal = (props) => {
                     effect="solid"
                     place="right"
                   />
-                </InputsContainer>
+                </InputsContainer> */}
 
                 <InputsContainer>
                   <LabelComponent>Nationality</LabelComponent>
