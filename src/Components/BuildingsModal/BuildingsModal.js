@@ -25,8 +25,9 @@ const BuildingsModal = (props) => {
   const name = useRef();
   const floorCount = useRef();
   const address = useRef();
-
-  if (props.data !== undefined && showBorders === false) {
+  
+  if (props?.data && !showBorders) {
+    console.log(props.data.Name)
     name.current.value = props.data.Name;
     floorCount.current.selectedIndex = props.data.FloorCount;
     address.current.value = props.data.BuildingAddress;
@@ -149,6 +150,7 @@ const BuildingsModal = (props) => {
       if (props.page === "add") {
         addUser();
       } else {
+
         editUser();
       }
     }

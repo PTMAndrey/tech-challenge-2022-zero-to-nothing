@@ -21,7 +21,7 @@ const Buildings = () => {
   const [openDeleteModal, setOpenDeleteModal] = useState();
   const [openEditModal, setOpenEditModal] = useState();
   const [data, setData] = useState();
-  const [building, setBuilding] = useState();
+  const [building, setBuilding] = useState("");
   const [refresh, setRefresh] = useState(false);
   const [pagination, setPaginiation] = useState(1);
 
@@ -74,8 +74,9 @@ const Buildings = () => {
     .then((response) => console.log("resp", response))
     .then((response) => response.json())
     .then((data) => setBuilding(data));
-      
-    refreshPage();
+            
+          refreshPage();
+    setRefresh(true);
   };
   
   const handleAddClose = () => {
@@ -122,7 +123,7 @@ const Buildings = () => {
           page={"buildings"}
           search={onSearch}
           filter={onFilter - 1}
-          //openDeleteModal={handleDeleteOpen}
+          openDeleteModal={handleDeleteOpen}
           openEditModal={handleEditOpen}
           pagination={pagination}
           handleSetPagination={setPaginiation}
