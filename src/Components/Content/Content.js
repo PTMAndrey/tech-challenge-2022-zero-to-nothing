@@ -10,9 +10,6 @@ import Desk from '../../Pages/Desk/Desk';
 import Remote from '../../Pages/Remote/Remote';
 import Users from '../../Pages/Users/Users.js';
 import Header from '../../Components/Header/Header';
-
-import InProgress from '../../Components/InProgress/InProgress';
-
 // this component represents the Content for every component selected from Sidebar
 
 const Content = () => {
@@ -22,14 +19,14 @@ const Content = () => {
     return ( 
         <Container showSidebar={showSidebar}>
             <Header/>
-            {location === '/' && <InProgress/> }{/* Dashboard*/}
-            {location === '/dashboard' && <InProgress/> }{/* Dashboard*/}
+            {location === '/' && <Dashboard/> }{/* Dashboard*/}
+            {location === '/dashboard' && <Dashboard/> }{/* Dashboard*/}
             {location === '/user' && <User/> } {/* User management*/}
             {location === '/buildings' && <Buildings/> }{/* Buildings Management*/}
-            {location === '/office' && <InProgress/> }{/* Office Management*/}
-            {location === '/offices' && <InProgress/> }{/* Office Status */}
-            {location === '/desk' && <InProgress/> }{/* Desk Assignment*/}
-            {location === '/remote' && <InProgress/> }{/* Remote request*/}
+            {location === '/office' && <Office/> }{/* Office Management*/}
+            {location === '/offices' && <Offices/> }{/* Office Status */}
+            {location === '/desk' && <Desk/> }{/* Desk Assignment*/}
+            {location === '/remote' && <Remote/> }{/* Remote request*/}
             {location === '/users' && <Users/> }{/* User Status*/}
         </Container>
      );

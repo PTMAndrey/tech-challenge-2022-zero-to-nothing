@@ -30,7 +30,7 @@ const Routing = () => {
       <Route
         path="/login"
         exact
-        element={role === null ? <LoginPage /> : <Navigate to="/login" />}
+        element={role === null ? <LoginPage /> : <Navigate to="/" />}
       />
 
       <Route
@@ -127,7 +127,7 @@ const Routing = () => {
 
       <Route path="*" exact element={<NotFound />} />
 
-      <Route path="/" element={ (role===null || localStorage.getItem("status")==="Inactive" )? <LoginPage/> : <Main/> }>
+      <Route path="/" element={ role===null? <LoginPage/> : <Main/> }>
               <Route
                 path="login"
                 exact
