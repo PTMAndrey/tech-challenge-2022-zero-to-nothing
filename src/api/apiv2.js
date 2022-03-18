@@ -82,6 +82,7 @@ export const getUser = createAsyncThunk(
       if (response.ok) {
         const data = await response.json();
         console.log(data);
+        localStorage.setItem("name", data.FirstName + " " + data.LastName);
         localStorage.setItem("token", data.Token);
         localStorage.setItem("role", data.Role);
         localStorage.setItem("status", data.AccountStatus);
