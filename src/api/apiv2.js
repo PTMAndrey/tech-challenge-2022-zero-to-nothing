@@ -89,12 +89,13 @@ export const getUser = createAsyncThunk(
 
         dispatch(setPending(false));
         // payload.history.push('/');
-        payload.history("/");
+        // payload.history("/");
         if (localStorage.getItem("status") === "Inactive") {
           throw Error("This account has been deactivated! Contact your administrator!");
           payload.history("/login");
-
-        } else return data;
+        } 
+        else
+         return data;
       } else if (response.status === 400) {
         dispatch(setPending(false));
         const error = await response.json();
