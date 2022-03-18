@@ -34,18 +34,25 @@ const UserModal = (props) => {
   const gender = useRef();
   const birth_date = useRef();
   const nationality = useRef();
+  const page = props.page;
 
+  useEffect(() => {
   if (props.data !== undefined && showBorders === false) {
     console.log("props.data", props.data);
     email.current.value = props.data.Email;
     first_name.current.value = props.data.FirstName;
     last_name.current.value = props.data.LastName;
     // password.current.value = props.data.Password;
-    role.current.selectedIndex = props.data.Role;
-    gender.current.selectedIndex = props.data.Gender;
+    // role.current.value = props.data.Role;
+    
+    role.current.value = props.data.Role;
+
+    gender.current.value = props.data.Gender;
     //birth_date.current.value = props.data.BirthDate;
-    nationality.current.selectedIndex = props.data.Nationality;
-  }
+    nationality.current.value = props.data.Nationality;
+    }
+  }, [props]);
+
 
   const [errors, setErrors] = useState({
     email: [],
@@ -93,14 +100,20 @@ const UserModal = (props) => {
 
   const handleRoleErrors = () => {
     let roleInput = role.current.value;
-    if (roleInput === "placeholder") return "Role is a required field!";
+    if(roleInput === "placeholder"&& page ==='edit')
+     { role.current.value = props.data.Role;
+     console.log("AICIIII");
+      return " ";}
+    if (roleInput === "placeholder") 
+      return "Role is a required field!";
+    
     return " ";
   };
 
   const handleGenderErrors = () => {
     let genderInput = gender.current.value;
     if( genderInput === "placeholder"){
-      gender.current.selectedIndex = props.data.Gender;
+      gender.current.value = props.data.Gender;
       return " ";
     }
     return 
@@ -143,6 +156,8 @@ const UserModal = (props) => {
   };
 
   const editUser = () => {
+    console.log('role', role.current.value);
+    
     fetch(endpoints.update_user, {
       method: 'PUT',
       body: JSON.stringify({
@@ -154,7 +169,7 @@ const UserModal = (props) => {
         FirstName: first_name.current.value,
         LastName: last_name.current.value,
         Role: role.current.selectedIndex-1,
-        Gender: gender.current.selectedIndex,
+        Gender: gender.current.selectedIndex-1,
         BirthDate: props.data.BirthDate,
         RemotePercentage: props.data.RemotePercentage,
        // Nationality: "Romanian",
@@ -194,14 +209,14 @@ const UserModal = (props) => {
     };
 
     let emailError ;
-    if( props.page === "edit")
+    if( page === "edit")
       emailError=" ";
     else
       emailError = handleEmailErrors();
     emailError !== " " && error.email.push(emailError);
     
     let passwordError;
-    if( props.page === "edit")
+    if( page === "edit")
       passwordError=" ";
     else
       passwordError = handlePasswordErrors();
@@ -213,7 +228,7 @@ const UserModal = (props) => {
     let last_nameError = handleLastNameErrors();
     last_nameError !== " " && error.last_name.push(last_nameError);
 
-    let roleError = handleRoleErrors();
+    let roleError= handleRoleErrors();
     roleError !== " " && error.role.push(roleError);
 
     if (
@@ -223,7 +238,7 @@ const UserModal = (props) => {
       error.last_name.length === 0 &&
       error.role.length === 0
     ) {
-      if (props.page === "add") {
+      if ( page === "add") {
         addUser();
       } else {
         let genderError = handleGenderErrors();
@@ -283,7 +298,7 @@ const UserModal = (props) => {
                   }
                 />
                 <LabelComponent htmlFor="email">Email</LabelComponent>
-                {props.page === "edit" ?
+                { page === "edit" ?
                 <FormsInputComponent
                   id="email"
                   ref={email}
@@ -332,7 +347,7 @@ const UserModal = (props) => {
                     errors.last_name[0] ? errors.last_name : ""
                   }
                 />
-                {props.page === "edit" ? null : <div>
+                {page === "edit" ? null : <div>
                 <LabelComponent htmlFor="password">Password</LabelComponent>
                 <PasswordInput>
                 <FormsInputComponent
@@ -377,9 +392,9 @@ const UserModal = (props) => {
                     <option value="placeholder" hidden>
                       Role
                     </option>
-                    <option>Administrator</option>
-                    <option>OfficeAdministrator</option>
-                    <option>Employee</option>
+                    <option value="Administrator">Administrator</option>
+                    <option value="OfficeAdministrator">OfficeAdministrator</option>
+                    <option value="Employee">Employee</option>
                   </DropDown>
                   <ReactTooltip
                     id="role"
@@ -463,7 +478,7 @@ const UserModal = (props) => {
               />
               <ButtonComponent
                 type="submit"
-                onClick={() => handleErrors(props.page)}
+                onClick={() => handleErrors(page)}
               >
                 Submit
               </ButtonComponent>
