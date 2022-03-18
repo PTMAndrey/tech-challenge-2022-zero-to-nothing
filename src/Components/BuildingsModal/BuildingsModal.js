@@ -21,25 +21,29 @@ const BuildingsModal = (props) => {
   const classes = useStyles();
   const [showBorders, setShowBorders] = useState(false);
 
+  const page = props.page;
   //updating the useRef current value each time the input value is updated by entering text into the input field.
   const name = useRef();
   const floorCount = useRef();
   const address = useRef();
-  
-  if (props?.data && !showBorders) {
-    console.log(props.data.Name)
-    name.current.value = props.data.Name;
-    floorCount.current.selectedIndex = props.data.FloorCount;
-    address.current.value = props.data.BuildingAddress;
-  }
+  useEffect(() => {
+    if (props.data !== undefined && showBorders === false) {
+            console.log(props.data.Name);
+            name.current.value = props.data.Name;
+            floorCount.current.value = props.data.FloorCount;
+            address.current.value = props.data.BuildingAddress;
+        }
+    }, [props]);
 
   const [errors, setErrors] = useState({
     name: [],
     floorCount: [],
     address: [],
   });
+  
 
   const handleNameErrors = () => {
+    //   name.current.value.replace(" \g","%20")
     let nameInput = name.current.value;
     if (nameInput === "") return "Name is a required field!";
 
@@ -51,10 +55,11 @@ const BuildingsModal = (props) => {
 
   const handleFloorInputErrors = () => {
     let floorInput = floorCount.current.value;
-    if(props.page === "add" && floorInput === "placeholder") 
+    
+    if( page === "edit" && floorInput === "placeholder")
+        floorCount.current.value = props.data.FloorCount;
+    if(floorInput === "placeholder") 
         return "Floor is a required field!";
-    if(props.page === "edit" && floorInput === "placeholder")
-        floorCount.current.selectedIndex = props.data.FloorCount;
     return " ";
   };
 
@@ -101,7 +106,7 @@ const BuildingsModal = (props) => {
       body: JSON.stringify({
         BuildingId: props.data.BuildingId,
         Name: name.current.value,
-        FloorCount: floorCount.current.selectedIndex,
+        FloorCount: floorCount.current.selectedIndex-1,
         BuildingAddress: address.current.value,
       }),
       headers: {
@@ -147,7 +152,7 @@ const BuildingsModal = (props) => {
       error.floorCount.length === 0 &&
       error.address.length === 0
     ) {
-      if (props.page === "add") {
+      if (page === "add") {
         addBuilding();
       } else {
         editBuilding();
@@ -268,7 +273,7 @@ const BuildingsModal = (props) => {
               />
               <ButtonComponent
                 type="submit"
-                onClick={() => handleErrors(props.page)}
+                onClick={() => handleErrors(page)}
               >
                 Submit
               </ButtonComponent>

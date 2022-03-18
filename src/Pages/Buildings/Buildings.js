@@ -18,10 +18,9 @@ const Buildings = () => {
   const [onFilter, setOnFilter] = useState("");
   const [dataPending, setDataPending] = useState(false);
   const [openAddModal, setOpenAddModal] = useState();
-  const [openDeleteModal, setOpenDeleteModal] = useState();
   const [openEditModal, setOpenEditModal] = useState();
   const [data, setData] = useState();
-  const [building, setBuilding] = useState("");
+  const [building, setBuilding] = useState();
   const [refresh, setRefresh] = useState(false);
   const [pagination, setPaginiation] = useState(1);
 
@@ -45,14 +44,15 @@ const Buildings = () => {
 
 
   const handleEditOpen = (name) => {
-    fetch(endpoints.get_building_by_name + `/${name}`, {
+    fetch(endpoints.get_building_by_name + `/${encodeURIComponent(name)}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: "Bearer " + localStorage.getItem("token"),
       },
     })
-      .then((response) => response.json())
+      .then((response) => {
+      console.log("asda",response.json()); })
       .then((data) => setBuilding(data));
     setOpenEditModal(true);
   };
@@ -64,7 +64,7 @@ const Buildings = () => {
   };
 
   const handleDeleteOpen = (name) => {
-    fetch(endpoints.delete_building + `/${name}`, {
+    fetch(endpoints.delete_building + `/${encodeURIComponent(name)}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

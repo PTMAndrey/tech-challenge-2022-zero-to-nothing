@@ -102,7 +102,6 @@ const UserModal = (props) => {
     let roleInput = role.current.value;
     if(roleInput === "placeholder"&& page ==='edit')
      { role.current.value = props.data.Role;
-     console.log("AICIIII");
       return " ";}
     if (roleInput === "placeholder") 
       return "Role is a required field!";

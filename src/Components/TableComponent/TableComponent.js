@@ -156,7 +156,7 @@ console.log()
                     <div>
                     <BiEditAlt
                       size={24}
-                      onClick={() =>{ props.openEditModal(elem.name);}}
+                      onClick={() => props.openEditModal(elem.name)}
                       cursor="pointer"
                     />
                     <AiOutlineDelete 
@@ -259,13 +259,11 @@ const Tr = styled.tr`
   background: #ffffff;
   color: #0b2559;
   padding: 25px;
-
   &:hover {
     td {
       background: #fafafa;
     }
   }
-
   @media (max-width: 840px) {
     display: flex;
     flex-direction: column;
@@ -286,7 +284,6 @@ const Td = styled.td`
   height: 80px;
   box-sizing: border-box;
   background: #ffffff;
-
   @media (max-width: 840px) {
     text-align: center;
     padding-left: 0px;
@@ -300,7 +297,6 @@ const IconStyled = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-
   @media (max-width: 840px) {
     margin: 0 auto;
     margin-top: 10px;
